@@ -47,19 +47,19 @@
         }
 
         /* ==========================================
-           [핵심 수정] 하단에 넓게 깔리는 운해(산수화) 
+           [최종 수정] 산수화 바닥 밀착 및 크기 극대화 
            ========================================== */
         .mountain-bg {
-            /* 원본 이미지 하단의 하얀 안개 부분을 화면 밑으로 완전히 숨겨버립니다 */
-            bottom: -15vh; 
+            /* 투명해진 하단 안개 부분을 모니터 밖(지하)으로 40%나 묻어버립니다 */
+            bottom: -40vh; 
             left: 0;
             width: 100vw;
-            /* 밑으로 끌어내린 만큼 윗부분이 비지 않도록 높이를 더 거대하게 키웁니다 */
-            height: 75vh; 
+            /* 묻어버린 만큼 그림이 짤리지 않도록 전체 높이를 거대하게(120vh) 키웁니다 */
+            height: 120vh; 
             object-fit: cover;
             object-position: center bottom; 
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
         }
 
         /* 왼쪽에서 가지를 뻗는 대나무 */
@@ -122,8 +122,8 @@
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
-            /* 모바일에서도 산맥이 바닥에 딱 붙도록 조정 */
-            .mountain-bg { bottom: -10vh; height: 50vh; }
+            /* 모바일에서도 산맥이 바닥에 딱 붙도록 강력하게 조정 */
+            .mountain-bg { bottom: -25vh; height: 80vh; }
             .bamboo-bg { height: 60vh; left: -10vw; }
         }
     </style>
@@ -132,8 +132,8 @@
 
     <div class="hanji-texture"></div>
 
-    <!-- 배경 이미지: 산수화가 바닥에 밀착되도록 수정됨 -->
     <img class="bg-painting bamboo-bg" src="ink draw (1).jpg" alt="대나무 배경">
+    <!-- 바닥에 완벽히 밀착되도록 수정된 산수화 이미지 -->
     <img class="bg-painting mountain-bg" src="ink draw (2).jpg" alt="산수화 배경">
 
     <div class="content" id="main-content">
@@ -149,6 +149,3 @@
     </script>
 </body>
 </html>
-```eof
-
-이제 산수화의 밑동이 화면 밖으로 살짝 내려가면서, 진하고 묵직한 산의 능선이 화면 바닥에 단단하게 고정될 것입니다. 위쪽으로는 자연스럽게 구름처럼 흩어지며 글씨와 멋지게 어우러지는지 확인해 보세요!
