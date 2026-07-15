@@ -31,23 +31,22 @@
             pointer-events: none; z-index: 10; mix-blend-mode: multiply;
         }
 
-        /* 2. 먹물 스플래터 공통 애니메이션 */
+        /* 2. 먹물 스플래터 공통 애니메이션 (은은하게 피어오름) */
         .ink-splatter {
-            position: absolute; opacity: 0; transform: scale(0);
+            position: absolute; opacity: 0; transform: scale(0.9); /* 처음부터 너무 작지 않게 시작 */
             pointer-events: none; z-index: 1; mix-blend-mode: multiply; 
         }
+        
+        /* [핵심 수정] 타격감을 빼고, 1.5초 동안 아주 부드럽게 스며드는 효과로 변경 */
         .splat-anim {
-            animation: splatBang 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: splatBloom 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
-        @keyframes splatBang {
-            0% { opacity: 0; transform: scale(0) rotate(-5deg); }
+        @keyframes splatBloom {
+            0% { opacity: 0; transform: scale(0.9) rotate(-3deg); }
             100% { opacity: 0.85; transform: scale(1) rotate(0deg); }
         }
 
-        /* ==========================================
-           [핵심 수정] 3. 타이틀 주변 중앙 집중형 배치 
-           ========================================== */
-        
+        /* 3. 타이틀 주변 중앙 집중형 배치 */
         .splat-1 { /* 타이틀 왼쪽 위 (긴 사선) */
             top: 10%; left: 15%; width: 35vw; max-width: 450px; object-fit: contain;
         }
@@ -72,7 +71,6 @@
             font-family: 'ChosunGg', '궁서', 'Gungsuh', serif; font-size: 6rem; 
             font-weight: normal; color: var(--ink-black); margin-bottom: 15px; letter-spacing: -2px;
             word-break: keep-all; 
-            /* 먹물이 뒤에 깔려도 글씨가 묻히지 않도록 후광 효과 강화 */
             text-shadow: 0px 0px 20px rgba(245, 242, 235, 1), 0px 2px 10px rgba(255, 255, 255, 0.8); 
         }
         .subtitle {
@@ -91,7 +89,7 @@
         }
         .btn-enter:hover { background-color: #900000; transform: translateY(-4px) scale(1.03); }
 
-        /* 모바일 화면 맞춤형 배치 (글씨가 가려지지 않게 여백 조정) */
+        /* 모바일 화면 맞춤형 배치 */
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
@@ -121,11 +119,11 @@
         document.addEventListener("DOMContentLoaded", function() {
             setTimeout(() => { document.getElementById('main-content').classList.add('content-reveal'); }, 200);
             
-            // 타이틀 등장 후 주변에서 순차적으로 터짐
-            setTimeout(() => { document.getElementById('ink1').classList.add('splat-anim'); }, 700);
-            setTimeout(() => { document.getElementById('ink2').classList.add('splat-anim'); }, 1200);
-            setTimeout(() => { document.getElementById('ink3').classList.add('splat-anim'); }, 1700);
-            setTimeout(() => { document.getElementById('ink4').classList.add('splat-anim'); }, 2200);
+            // [핵심 수정] 간격을 0.1초로 극단적으로 줄여, 마치 하나의 거대한 붓터치가 연달아 번지는 것처럼 연출
+            setTimeout(() => { document.getElementById('ink1').classList.add('splat-anim'); }, 400);
+            setTimeout(() => { document.getElementById('ink3').classList.add('splat-anim'); }, 500);
+            setTimeout(() => { document.getElementById('ink2').classList.add('splat-anim'); }, 600);
+            setTimeout(() => { document.getElementById('ink4').classList.add('splat-anim'); }, 700);
         });
     </script>
 </body>
