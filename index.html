@@ -47,19 +47,17 @@
         }
 
         /* ==========================================
-           [최종 수정] 산수화 바닥 밀착 및 크기 극대화 
+           [최종 해결책] 산수화 바닥 완벽 밀착 
            ========================================== */
         .mountain-bg {
-            /* 투명해진 하단 안개 부분을 모니터 밖(지하)으로 40%나 묻어버립니다 */
-            bottom: -40vh; 
+            /* 핵심: 모니터 가로폭(vw)에 비례하여 그림의 하단 절반(안개)을 모니터 밖으로 완전히 잘라냅니다 */
+            bottom: -18vw; 
             left: 0;
             width: 100vw;
-            /* 묻어버린 만큼 그림이 짤리지 않도록 전체 높이를 거대하게(120vh) 키웁니다 */
-            height: 120vh; 
+            height: auto; /* 모니터 크기에 상관없이 원본 비율을 강제 유지하여 붕 뜨는 현상 방지 */
             object-fit: cover;
-            object-position: center bottom; 
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 15%);
         }
 
         /* 왼쪽에서 가지를 뻗는 대나무 */
@@ -123,7 +121,7 @@
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
             /* 모바일에서도 산맥이 바닥에 딱 붙도록 강력하게 조정 */
-            .mountain-bg { bottom: -25vh; height: 80vh; }
+            .mountain-bg { width: 250vw; left: -75vw; bottom: -45vw; }
             .bamboo-bg { height: 60vh; left: -10vw; }
         }
     </style>
