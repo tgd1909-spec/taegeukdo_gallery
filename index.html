@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>재단법인 태극도 디지털 사진관</title>
+    <title>태극도 디지털 사진관</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
     
@@ -31,69 +31,69 @@
             pointer-events: none; z-index: 10; mix-blend-mode: multiply;
         }
 
-        /* 2. 먹물 스플래터 공통 애니메이션 (깜빡임 완벽 차단) */
-        .ink-splatter {
-            position: absolute; 
-            opacity: 0; 
-            visibility: hidden; /* [핵심] 자바스크립트가 실행되기 전까지 화면에서 완벽히 은폐 */
-            transform: scale(0.9);
-            pointer-events: none; 
-            z-index: 1; 
-            mix-blend-mode: multiply; 
-            will-change: opacity, transform; 
-        }
+        /* ==========================================
+           [새로운 디자인] 2. 정적인 동양화 배경 배치 (산수화 & 대나무)
+           ========================================== */
         
-        .splat-anim {
-            visibility: visible; /* [핵심] 애니메이션 시작과 동시에 은폐 해제 */
-            animation: splatBloom 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-        
-        @keyframes splatBloom {
-            0% { opacity: 0; transform: scale(0.9) rotate(-3deg); }
-            100% { opacity: 0.85; transform: scale(1) rotate(0deg); }
+        .bg-painting {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: multiply; /* 하얀 배경을 날리고 먹물만 한지에 스며들게 함 */
+            opacity: 0; /* 처음에 숨겨둠 (부드럽게 나타나기 위함) */
+            animation: paintingFadeIn 3s ease-in-out forwards;
         }
 
-        /* 3. 여백의 미를 살린 적절한 분산 배치 */
-        .splat-1 { /* 타이틀 왼쪽 위 (사선) */
-            top: 10vh; left: 12vw; 
-            width: 32vw; max-width: 420px; object-fit: contain;
-        }
-        .splat-2 { /* 버튼 오른쪽 아래 (덩어리) */
-            bottom: 8vh; right: 15vw; 
-            width: 38vw; max-width: 480px; object-fit: contain;
-        }
-        .splat-3 { /* 타이틀 오른쪽 위 (날렵한 터치) */
-            top: 18vh; right: 20vw; 
-            width: 22vw; max-width: 280px; object-fit: contain;
-        }
-        .splat-4 { /* 타이틀 왼쪽 아래 (잔물방울) */
-            bottom: 18vh; left: 18vw; 
-            width: 25vw; max-width: 320px; object-fit: contain; 
+        @keyframes paintingFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 0.6; } /* 너무 진하지 않게 60% 농도로 은은하게 고정 */
         }
 
-        /* 4. 매끄럽고 완벽한 타이틀 애니메이션 */
+        /* 하단에 넓게 깔리는 운해(산수화) */
+        .mountain-bg {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45vh;
+            object-fit: cover;
+            object-position: top;
+            /* 산수화 윗부분이 칼로 자른듯 보이지 않게 자연스럽게 그라데이션으로 지워줌 */
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 30%);
+        }
+
+        /* 왼쪽에서 가지를 뻗는 대나무 */
+        .bamboo-bg {
+            top: 0;
+            left: 0;
+            height: 80vh;
+            width: auto;
+            opacity: 0;
+            animation: bambooFadeIn 3s ease-in-out 0.5s forwards; /* 산보다 0.5초 늦게 나타남 */
+        }
+
+        @keyframes bambooFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 0.4; } /* 대나무는 산보다 조금 더 연하게 처리 */
+        }
+
+        /* 3. 매끄럽고 완벽한 타이틀 애니메이션 */
         .content {
             position: relative; z-index: 5; display: flex; flex-direction: column;
             justify-content: center; align-items: center; height: 100%; text-align: center; padding: 20px;
             opacity: 0; 
-            visibility: hidden; /* 타이틀도 초기에 강제 숨김 처리 */
+            visibility: hidden;
             will-change: opacity, transform;
         }
         
         .content-reveal { 
             visibility: visible;
-            animation: smoothReveal 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; 
+            animation: smoothReveal 2s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards; /* 배경이 깔린 후 글씨가 우아하게 등장 */
         }
         
         @keyframes smoothReveal {
-            0% { 
-                opacity: 0; 
-                transform: translate3d(0, 40px, 0); 
-            }
-            100% { 
-                opacity: 1; 
-                transform: translate3d(0, 0, 0); 
-            }
+            0% { opacity: 0; transform: translate3d(0, 30px, 0); }
+            100% { opacity: 1; transform: translate3d(0, 0, 0); }
         }
 
         h1 {
@@ -122,23 +122,22 @@
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
-            .splat-1 { top: 8vh; left: -2vw; width: 55vw; } 
-            .splat-2 { bottom: 10vh; right: -5vw; width: 65vw; }
-            .splat-3 { top: 15vh; right: 5vw; width: 40vw; }
-            .splat-4 { bottom: 20vh; left: 5vw; width: 35vw; }
+            .mountain-bg { height: 35vh; }
+            .bamboo-bg { height: 50vh; left: -10vw; }
         }
     </style>
 </head>
 <body>
 
+    <!-- 한지 질감 -->
     <div class="hanji-texture"></div>
 
-    <!-- 타이틀 주변을 감싸는 먹물 4장 -->
-    <img class="ink-splatter splat-1" id="ink1" src="ink1.png" alt="왼쪽 위 먹물">
-    <img class="ink-splatter splat-2" id="ink2" src="ink2.png" alt="오른쪽 아래 먹물">
-    <img class="ink-splatter splat-3" id="ink3" src="ink3.png" alt="오른쪽 위 먹물">
-    <img class="ink-splatter splat-4" id="ink4" src="ink5.png" alt="왼쪽 아래 잔물방울">
+    <!-- 새로운 동양화 배경 이미지 적용 -->
+    <!-- 구해주신 파일 이름을 그대로 사용했습니다 -->
+    <img class="bg-painting bamboo-bg" src="ink draw (1).jpg" alt="대나무 배경">
+    <img class="bg-painting mountain-bg" src="ink draw (2).jpg" alt="산수화 배경">
 
+    <!-- 메인 타이틀 영역 -->
     <div class="content" id="main-content">
         <h1>태극도</h1>
         <p class="subtitle">도우(道友) 여러분, 디지털 사진관에 오신 것을 환영합니다</p>
@@ -147,16 +146,16 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // 글씨가 뚝 끊기지 않도록 최적화된 애니메이션 시작
-            setTimeout(() => { document.getElementById('main-content').classList.add('content-reveal'); }, 200);
-            
-            // 먹물이 하나의 붓질처럼 아주 자연스럽게 번지는 타이밍
-            setTimeout(() => { document.getElementById('ink1').classList.add('splat-anim'); }, 400);
-            setTimeout(() => { document.getElementById('ink3').classList.add('splat-anim'); }, 500);
-            setTimeout(() => { document.getElementById('ink2').classList.add('splat-anim'); }, 600);
-            setTimeout(() => { document.getElementById('ink4').classList.add('splat-anim'); }, 700);
+            // 복잡한 먹물 애니메이션을 모두 제거하고, 타이틀만 우아하게 등장하도록 단순화했습니다.
+            document.getElementById('main-content').classList.add('content-reveal');
         });
     </script>
 </body>
 </html>
 ```eof
+
+기존에 튀어 오르던 먹물 스플래터들은 코드에서 완전히 지웠습니다. 대신 사이트에 접속하면 **화면 아래쪽에는 깊은 산수화(`ink draw (2).jpg`)가, 왼쪽 위에는 고즈넉한 대나무(`ink draw (1).jpg`)가 물안개 피어나듯 스르륵 나타나며** 완전히 새로운 분위기를 연출할 것입니다.
+
+깃허브에 코드를 덮어쓰실 때, 꼭 구해주신 **`ink draw (1).jpg` 파일과 `ink draw (2).jpg` 파일도 함께 업로드(Commit)** 해주셔야 화면에 그림이 나타납니다. 
+
+먹물이 튀는 것보다 이렇게 정적인 한 폭의 동양화처럼 연출하니 훨씬 차분하고 고급스러워지지 않았나요?
