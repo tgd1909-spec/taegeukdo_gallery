@@ -31,50 +31,46 @@
             pointer-events: none; z-index: 10; mix-blend-mode: multiply;
         }
 
-        /* ==========================================
-           [새로운 디자인] 2. 정적인 동양화 배경 배치 (산수화 & 대나무)
-           ========================================== */
-        
+        /* 2. 정적인 동양화 배경 배치 (산수화 & 대나무) */
         .bg-painting {
             position: absolute;
             pointer-events: none;
             z-index: 1;
-            mix-blend-mode: multiply; /* 하얀 배경을 날리고 먹물만 한지에 스며들게 함 */
-            opacity: 0; /* 처음에 숨겨둠 (부드럽게 나타나기 위함) */
+            mix-blend-mode: multiply; 
+            opacity: 0; 
             animation: paintingFadeIn 3s ease-in-out forwards;
         }
 
         @keyframes paintingFadeIn {
             0% { opacity: 0; }
-            100% { opacity: 0.6; } /* 너무 진하지 않게 60% 농도로 은은하게 고정 */
+            100% { opacity: 0.6; } 
         }
 
-        /* 하단에 넓게 깔리는 운해(산수화) */
+        /* [수정됨] 하단에 넓게 깔리는 운해(산수화) */
         .mountain-bg {
             bottom: 0;
             left: 0;
-            width: 100%;
-            height: 45vh;
-            object-fit: cover;
-            object-position: top;
-            /* 산수화 윗부분이 칼로 자른듯 보이지 않게 자연스럽게 그라데이션으로 지워줌 */
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 30%);
+            width: 100vw; /* 어떤 모니터든 가로를 100% 꽉 채우도록 강제 */
+            height: 55vh; /* 산의 높이를 기존 45vh에서 55vh로 높여 웅장함 강조 */
+            object-fit: cover; /* 비율이 깨지지 않게 화면을 덮음 */
+            object-position: center bottom; /* 이미지가 위로 떠서 밑이 잘리지 않도록 바닥에 밀착 */
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
         }
 
-        /* 왼쪽에서 가지를 뻗는 대나무 */
+        /* [수정됨] 왼쪽에서 가지를 뻗는 대나무 */
         .bamboo-bg {
-            top: 0;
-            left: 0;
-            height: 80vh;
+            top: -5vh; /* 살짝 더 위에서 내려오도록 */
+            left: -2vw; /* 왼쪽 여백 없이 바짝 붙도록 */
+            height: 90vh; /* 대나무 길이를 더 늘려서 화면을 부드럽게 감싸게 함 */
             width: auto;
             opacity: 0;
-            animation: bambooFadeIn 3s ease-in-out 0.5s forwards; /* 산보다 0.5초 늦게 나타남 */
+            animation: bambooFadeIn 3s ease-in-out 0.5s forwards; 
         }
 
         @keyframes bambooFadeIn {
             0% { opacity: 0; }
-            100% { opacity: 0.4; } /* 대나무는 산보다 조금 더 연하게 처리 */
+            100% { opacity: 0.4; } 
         }
 
         /* 3. 매끄럽고 완벽한 타이틀 애니메이션 */
@@ -88,7 +84,7 @@
         
         .content-reveal { 
             visibility: visible;
-            animation: smoothReveal 2s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards; /* 배경이 깔린 후 글씨가 우아하게 등장 */
+            animation: smoothReveal 2s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards; 
         }
         
         @keyframes smoothReveal {
@@ -122,22 +118,19 @@
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
-            .mountain-bg { height: 35vh; }
-            .bamboo-bg { height: 50vh; left: -10vw; }
+            .mountain-bg { height: 40vh; }
+            .bamboo-bg { height: 60vh; left: -10vw; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 한지 질감 -->
     <div class="hanji-texture"></div>
 
-    <!-- 새로운 동양화 배경 이미지 적용 -->
-    <!-- 구해주신 파일 이름을 그대로 사용했습니다 -->
+    <!-- 배경 이미지: 산수화가 화면 가로를 꽉 채우도록 수정됨 -->
     <img class="bg-painting bamboo-bg" src="ink draw (1).jpg" alt="대나무 배경">
     <img class="bg-painting mountain-bg" src="ink draw (2).jpg" alt="산수화 배경">
 
-    <!-- 메인 타이틀 영역 -->
     <div class="content" id="main-content">
         <h1>태극도</h1>
         <p class="subtitle">도우(道友) 여러분, 디지털 사진관에 오신 것을 환영합니다</p>
@@ -146,7 +139,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // 복잡한 먹물 애니메이션을 모두 제거하고, 타이틀만 우아하게 등장하도록 단순화했습니다.
             document.getElementById('main-content').classList.add('content-reveal');
         });
     </script>
@@ -154,8 +146,4 @@
 </html>
 ```eof
 
-기존에 튀어 오르던 먹물 스플래터들은 코드에서 완전히 지웠습니다. 대신 사이트에 접속하면 **화면 아래쪽에는 깊은 산수화(`ink draw (2).jpg`)가, 왼쪽 위에는 고즈넉한 대나무(`ink draw (1).jpg`)가 물안개 피어나듯 스르륵 나타나며** 완전히 새로운 분위기를 연출할 것입니다.
-
-깃허브에 코드를 덮어쓰실 때, 꼭 구해주신 **`ink draw (1).jpg` 파일과 `ink draw (2).jpg` 파일도 함께 업로드(Commit)** 해주셔야 화면에 그림이 나타납니다. 
-
-먹물이 튀는 것보다 이렇게 정적인 한 폭의 동양화처럼 연출하니 훨씬 차분하고 고급스러워지지 않았나요?
+이제 어떤 넓은 모니터로 보시더라도 산맥이 중간에 끊기지 않고 화면 양 끝을 든든하게 받쳐주며, 대나무도 한층 더 힘 있게 뻗어 내려올 것입니다. 적용해보시고 풍경이 꽉 차게 잘 보이는지 확인해 주세요!
