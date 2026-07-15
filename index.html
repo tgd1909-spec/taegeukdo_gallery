@@ -31,55 +31,71 @@
             pointer-events: none; z-index: 10; mix-blend-mode: multiply;
         }
 
-        /* 2. 먹물 스플래터 공통 애니메이션 (은은하게 피어오름) */
+        /* 2. 먹물 스플래터 공통 애니메이션 (깜빡임 완벽 차단) */
         .ink-splatter {
-            position: absolute; opacity: 0; transform: scale(0.9);
-            pointer-events: none; z-index: 1; mix-blend-mode: multiply; 
-            
-            /* [핵심 수정] 무조건 화면 정중앙을 기준으로 위치를 잡도록 기준점 변경 */
-            top: 50%; left: 50%;
+            position: absolute; 
+            opacity: 0; 
+            visibility: hidden; /* [핵심] 자바스크립트가 실행되기 전까지 화면에서 완벽히 은폐 */
+            transform: scale(0.9);
+            pointer-events: none; 
+            z-index: 1; 
+            mix-blend-mode: multiply; 
+            will-change: opacity, transform; 
         }
         
         .splat-anim {
-            animation: splatBloom 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            visibility: visible; /* [핵심] 애니메이션 시작과 동시에 은폐 해제 */
+            animation: splatBloom 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
+        
         @keyframes splatBloom {
             0% { opacity: 0; transform: scale(0.9) rotate(-3deg); }
             100% { opacity: 0.85; transform: scale(1) rotate(0deg); }
         }
 
-        /* ==========================================
-           [핵심 수정] 3. 화면 중앙(글씨)에 찰싹 붙는 여백(Margin) 배치 
-           ========================================== */
-        
-        .splat-1 { /* 타이틀 왼쪽 위 (긴 사선) */
-            margin-top: -320px; 
-            margin-left: -450px; 
-            width: 450px; object-fit: contain;
+        /* 3. 여백의 미를 살린 적절한 분산 배치 */
+        .splat-1 { /* 타이틀 왼쪽 위 (사선) */
+            top: 10vh; left: 12vw; 
+            width: 32vw; max-width: 420px; object-fit: contain;
         }
-        .splat-2 { /* 버튼 오른쪽 아래 (무거운 덩어리) */
-            margin-top: -20px; 
-            margin-left: 150px; 
-            width: 450px; object-fit: contain;
+        .splat-2 { /* 버튼 오른쪽 아래 (덩어리) */
+            bottom: 8vh; right: 15vw; 
+            width: 38vw; max-width: 480px; object-fit: contain;
         }
         .splat-3 { /* 타이틀 오른쪽 위 (날렵한 터치) */
-            margin-top: -300px; 
-            margin-left: 180px; 
-            width: 320px; object-fit: contain;
+            top: 18vh; right: 20vw; 
+            width: 22vw; max-width: 280px; object-fit: contain;
         }
         .splat-4 { /* 타이틀 왼쪽 아래 (잔물방울) */
-            margin-top: 50px; 
-            margin-left: -400px; 
-            width: 280px; object-fit: contain; opacity: 0.7; 
+            bottom: 18vh; left: 18vw; 
+            width: 25vw; max-width: 320px; object-fit: contain; 
         }
 
-        /* 4. 타이포그래피 및 버튼 */
+        /* 4. 매끄럽고 완벽한 타이틀 애니메이션 */
         .content {
             position: relative; z-index: 5; display: flex; flex-direction: column;
             justify-content: center; align-items: center; height: 100%; text-align: center; padding: 20px;
-            opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 0; 
+            visibility: hidden; /* 타이틀도 초기에 강제 숨김 처리 */
+            will-change: opacity, transform;
         }
-        .content-reveal { opacity: 1; transform: translateY(0); }
+        
+        .content-reveal { 
+            visibility: visible;
+            animation: smoothReveal 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; 
+        }
+        
+        @keyframes smoothReveal {
+            0% { 
+                opacity: 0; 
+                transform: translate3d(0, 40px, 0); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translate3d(0, 0, 0); 
+            }
+        }
+
         h1 {
             font-family: 'ChosunGg', '궁서', 'Gungsuh', serif; font-size: 6rem; 
             font-weight: normal; color: var(--ink-black); margin-bottom: 15px; letter-spacing: -2px;
@@ -102,14 +118,14 @@
         }
         .btn-enter:hover { background-color: #900000; transform: translateY(-4px) scale(1.03); }
 
-        /* 모바일 화면 맞춤형 배치 (가운데를 기준으로 약간씩만 떨어지도록 조정) */
+        /* 모바일 화면 맞춤형 배치 */
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
-            .splat-1 { margin-top: -250px; margin-left: -45vw; width: 65vw; } 
-            .splat-2 { margin-top: 20px; margin-left: -5vw; width: 70vw; }
-            .splat-3 { margin-top: -250px; margin-left: 10vw; width: 45vw; }
-            .splat-4 { margin-top: 80px; margin-left: -40vw; width: 40vw; }
+            .splat-1 { top: 8vh; left: -2vw; width: 55vw; } 
+            .splat-2 { bottom: 10vh; right: -5vw; width: 65vw; }
+            .splat-3 { top: 15vh; right: 5vw; width: 40vw; }
+            .splat-4 { bottom: 20vh; left: 5vw; width: 35vw; }
         }
     </style>
 </head>
@@ -131,9 +147,10 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // 글씨가 뚝 끊기지 않도록 최적화된 애니메이션 시작
             setTimeout(() => { document.getElementById('main-content').classList.add('content-reveal'); }, 200);
             
-            // 간격을 0.1초로 극단적으로 줄여, 마치 하나의 거대한 붓터치가 연달아 번지는 것처럼 연출
+            // 먹물이 하나의 붓질처럼 아주 자연스럽게 번지는 타이밍
             setTimeout(() => { document.getElementById('ink1').classList.add('splat-anim'); }, 400);
             setTimeout(() => { document.getElementById('ink3').classList.add('splat-anim'); }, 500);
             setTimeout(() => { document.getElementById('ink2').classList.add('splat-anim'); }, 600);
@@ -142,3 +159,4 @@
     </script>
 </body>
 </html>
+```eof
