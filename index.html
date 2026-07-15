@@ -43,23 +43,28 @@
 
         @keyframes paintingFadeIn {
             0% { opacity: 0; }
-            100% { opacity: 0.6; } 
+            100% { opacity: 0.8; } /* 그림이 잘 보이도록 투명도 살짝 조절 */
         }
 
         /* ==========================================
-           [완벽 해결책] 산수화 바닥 절대 밀착 공식 
+           [최종] 절대 안 뜨는 산수화 바닥 밀착 비율
            ========================================== */
         .mountain-bg {
-            /* 모니터 가로 폭에 상관없이, 무조건 화면 맨 아래(0)에서 지하로 25vh만큼 묻어버림 */
-            bottom: -25vh; 
+            /* bottom: 0; 으로 화면 맨 밑바닥에 완전 고정 */
+            bottom: 0; 
             left: 0;
+            /* 가로를 무조건 꽉 채웁니다 */
             width: 100vw;
-            /* 지하로 묻힌 만큼 높이를 늘려서 웅장함을 유지 (85vh - 25vh = 화면엔 60vh만 보임) */
-            height: 85vh; 
-            object-fit: cover;
-            object-position: center bottom; /* 이미지를 무조건 아래쪽 기준으로 정렬 */
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 35%);
+            /* 가로 길이에 비례해서 세로 길이를 자동으로 잡습니다 (비율 유지) */
+            height: auto; 
+            /* 이미지의 아랫부분을 기준으로 맞춰서 절대로 붕 뜨지 않게 합니다 */
+            object-fit: contain; 
+            object-position: bottom; 
+            /* 하얀 안개가 투명해져도 밑이 비어보이지 않도록 아주 살짝만 아래를 가려줍니다 */
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+            /* 혹시 이미지가 너무 작아서 안 보일까 봐 최소 높이를 지정했습니다 */
+            min-height: 50vh; 
         }
 
         /* 3. 매끄럽고 완벽한 타이틀 애니메이션 */
@@ -107,7 +112,7 @@
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
-            .mountain-bg { bottom: -15vh; height: 60vh; }
+            .mountain-bg { width: 150vw; left: -25vw; }
         }
     </style>
 </head>
@@ -115,7 +120,7 @@
 
     <div class="hanji-texture"></div>
 
-    <!-- 대나무를 삭제하고, 하단 안개를 완전히 파묻어버린 산수화 1장만 배치 -->
+    <!-- 대나무를 삭제하고, 하단에 밀착되는 산수화 1장만 배치 -->
     <img class="bg-painting mountain-bg" src="ink draw (2).jpg" alt="산수화 배경">
 
     <div class="content" id="main-content">
