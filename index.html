@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
     
     <style>
-        /* 1. 기본 설정 및 한지 텍스처 (기존과 동일) */
+        /* 1. 기본 설정 및 한지 텍스처 */
         @font-face {
             font-family: 'ChosunGg';
             src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGg.woff') format('woff');
@@ -44,21 +44,24 @@
             100% { opacity: 0.85; transform: scale(1) rotate(0deg); }
         }
 
-        /* [핵심] 먹물 개별 위치 및 크기 최적화 */
-        .splat-1 { /* 왼쪽 위: 사선 붓터치 */
-            top: -5vh; left: -2vw; width: 45vw; max-width: 450px; object-fit: contain;
+        /* ==========================================
+           [핵심 수정] 3. 타이틀 주변 중앙 집중형 배치 
+           ========================================== */
+        
+        .splat-1 { /* 타이틀 왼쪽 위 (긴 사선) */
+            top: 10%; left: 15%; width: 35vw; max-width: 450px; object-fit: contain;
         }
-        .splat-2 { /* 오른쪽 아래: 무거운 덩어리 */
-            bottom: -15vh; right: -10vw; width: 60vw; max-width: 650px; object-fit: contain;
+        .splat-2 { /* 버튼 오른쪽 아래 (무거운 덩어리) */
+            bottom: 12%; right: 18%; width: 30vw; max-width: 420px; object-fit: contain;
         }
-        .splat-3 { /* 왼쪽 아래: 날렵한 세로 터치 */
-            bottom: 2vh; left: 2vw; width: 25vw; max-width: 300px; object-fit: contain;
+        .splat-3 { /* 타이틀 오른쪽 위 (날렵한 터치) */
+            top: 15%; right: 22%; width: 22vw; max-width: 320px; object-fit: contain;
         }
-        .splat-4 { /* 오른쪽 위: 잔물방울 흩뿌림 */
-            top: 10vh; right: 8vw; width: 20vw; max-width: 250px; object-fit: contain; opacity: 0.6; 
+        .splat-4 { /* 타이틀 왼쪽 아래 (잔물방울) */
+            top: 45%; left: 22%; width: 20vw; max-width: 280px; object-fit: contain; opacity: 0.7; 
         }
 
-        /* 3. 타이포그래피 및 버튼 */
+        /* 4. 타이포그래피 및 버튼 */
         .content {
             position: relative; z-index: 5; display: flex; flex-direction: column;
             justify-content: center; align-items: center; height: 100%; text-align: center; padding: 20px;
@@ -68,11 +71,13 @@
         h1 {
             font-family: 'ChosunGg', '궁서', 'Gungsuh', serif; font-size: 6rem; 
             font-weight: normal; color: var(--ink-black); margin-bottom: 15px; letter-spacing: -2px;
-            word-break: keep-all; text-shadow: 0px 2px 15px rgba(255, 255, 255, 0.9); 
+            word-break: keep-all; 
+            /* 먹물이 뒤에 깔려도 글씨가 묻히지 않도록 후광 효과 강화 */
+            text-shadow: 0px 0px 20px rgba(245, 242, 235, 1), 0px 2px 10px rgba(255, 255, 255, 0.8); 
         }
         .subtitle {
             font-size: 2.2rem; font-weight: 600; color: #222222; margin-bottom: 60px;
-            word-break: keep-all; text-shadow: 0px 1px 10px rgba(255, 255, 255, 0.9);
+            word-break: keep-all; text-shadow: 0px 0px 15px rgba(245, 242, 235, 1);
         }
         .btn-enter {
             display: inline-block; background-color: var(--stamp-red); color: #FFFFFF;
@@ -86,10 +91,14 @@
         }
         .btn-enter:hover { background-color: #900000; transform: translateY(-4px) scale(1.03); }
 
+        /* 모바일 화면 맞춤형 배치 (글씨가 가려지지 않게 여백 조정) */
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
-            .splat-1 { width: 60vw; } .splat-2 { width: 80vw; }
+            .splat-1 { top: 12%; left: -5vw; width: 60vw; } 
+            .splat-2 { bottom: 15%; right: -5vw; width: 70vw; }
+            .splat-3 { top: 20%; right: -2vw; width: 45vw; }
+            .splat-4 { top: 45%; left: 5vw; width: 40vw; }
         }
     </style>
 </head>
@@ -97,11 +106,10 @@
 
     <div class="hanji-texture"></div>
 
-    <!-- 조합된 먹물 이미지 4장 배치 -->
     <img class="ink-splatter splat-1" id="ink1" src="ink1.png" alt="왼쪽 위 먹물">
     <img class="ink-splatter splat-2" id="ink2" src="ink2.png" alt="오른쪽 아래 먹물">
-    <img class="ink-splatter splat-3" id="ink3" src="ink3.png" alt="왼쪽 아래 먹물">
-    <img class="ink-splatter splat-4" id="ink4" src="ink5.png" alt="오른쪽 위 잔물방울">
+    <img class="ink-splatter splat-3" id="ink3" src="ink3.png" alt="오른쪽 위 먹물">
+    <img class="ink-splatter splat-4" id="ink4" src="ink5.png" alt="왼쪽 아래 잔물방울">
 
     <div class="content" id="main-content">
         <h1>태극도</h1>
@@ -113,7 +121,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             setTimeout(() => { document.getElementById('main-content').classList.add('content-reveal'); }, 200);
             
-            // 0.5초 간격으로 탁! 탁! 터지는 애니메이션 타이밍
+            // 타이틀 등장 후 주변에서 순차적으로 터짐
             setTimeout(() => { document.getElementById('ink1').classList.add('splat-anim'); }, 700);
             setTimeout(() => { document.getElementById('ink2').classList.add('splat-anim'); }, 1200);
             setTimeout(() => { document.getElementById('ink3').classList.add('splat-anim'); }, 1700);
