@@ -33,11 +33,13 @@
 
         /* 2. 먹물 스플래터 공통 애니메이션 (은은하게 피어오름) */
         .ink-splatter {
-            position: absolute; opacity: 0; transform: scale(0.9); /* 처음부터 너무 작지 않게 시작 */
+            position: absolute; opacity: 0; transform: scale(0.9);
             pointer-events: none; z-index: 1; mix-blend-mode: multiply; 
+            
+            /* [핵심 수정] 무조건 화면 정중앙을 기준으로 위치를 잡도록 기준점 변경 */
+            top: 50%; left: 50%;
         }
         
-        /* [핵심 수정] 타격감을 빼고, 1.5초 동안 아주 부드럽게 스며드는 효과로 변경 */
         .splat-anim {
             animation: splatBloom 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
@@ -46,18 +48,29 @@
             100% { opacity: 0.85; transform: scale(1) rotate(0deg); }
         }
 
-        /* 3. 타이틀 주변 중앙 집중형 배치 */
+        /* ==========================================
+           [핵심 수정] 3. 화면 중앙(글씨)에 찰싹 붙는 여백(Margin) 배치 
+           ========================================== */
+        
         .splat-1 { /* 타이틀 왼쪽 위 (긴 사선) */
-            top: 10%; left: 15%; width: 35vw; max-width: 450px; object-fit: contain;
+            margin-top: -320px; 
+            margin-left: -450px; 
+            width: 450px; object-fit: contain;
         }
         .splat-2 { /* 버튼 오른쪽 아래 (무거운 덩어리) */
-            bottom: 12%; right: 18%; width: 30vw; max-width: 420px; object-fit: contain;
+            margin-top: -20px; 
+            margin-left: 150px; 
+            width: 450px; object-fit: contain;
         }
         .splat-3 { /* 타이틀 오른쪽 위 (날렵한 터치) */
-            top: 15%; right: 22%; width: 22vw; max-width: 320px; object-fit: contain;
+            margin-top: -300px; 
+            margin-left: 180px; 
+            width: 320px; object-fit: contain;
         }
         .splat-4 { /* 타이틀 왼쪽 아래 (잔물방울) */
-            top: 45%; left: 22%; width: 20vw; max-width: 280px; object-fit: contain; opacity: 0.7; 
+            margin-top: 50px; 
+            margin-left: -400px; 
+            width: 280px; object-fit: contain; opacity: 0.7; 
         }
 
         /* 4. 타이포그래피 및 버튼 */
@@ -89,14 +102,14 @@
         }
         .btn-enter:hover { background-color: #900000; transform: translateY(-4px) scale(1.03); }
 
-        /* 모바일 화면 맞춤형 배치 */
+        /* 모바일 화면 맞춤형 배치 (가운데를 기준으로 약간씩만 떨어지도록 조정) */
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
-            .splat-1 { top: 12%; left: -5vw; width: 60vw; } 
-            .splat-2 { bottom: 15%; right: -5vw; width: 70vw; }
-            .splat-3 { top: 20%; right: -2vw; width: 45vw; }
-            .splat-4 { top: 45%; left: 5vw; width: 40vw; }
+            .splat-1 { margin-top: -250px; margin-left: -45vw; width: 65vw; } 
+            .splat-2 { margin-top: 20px; margin-left: -5vw; width: 70vw; }
+            .splat-3 { margin-top: -250px; margin-left: 10vw; width: 45vw; }
+            .splat-4 { margin-top: 80px; margin-left: -40vw; width: 40vw; }
         }
     </style>
 </head>
@@ -104,6 +117,7 @@
 
     <div class="hanji-texture"></div>
 
+    <!-- 타이틀 주변을 감싸는 먹물 4장 -->
     <img class="ink-splatter splat-1" id="ink1" src="ink1.png" alt="왼쪽 위 먹물">
     <img class="ink-splatter splat-2" id="ink2" src="ink2.png" alt="오른쪽 아래 먹물">
     <img class="ink-splatter splat-3" id="ink3" src="ink3.png" alt="오른쪽 위 먹물">
@@ -119,7 +133,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             setTimeout(() => { document.getElementById('main-content').classList.add('content-reveal'); }, 200);
             
-            // [핵심 수정] 간격을 0.1초로 극단적으로 줄여, 마치 하나의 거대한 붓터치가 연달아 번지는 것처럼 연출
+            // 간격을 0.1초로 극단적으로 줄여, 마치 하나의 거대한 붓터치가 연달아 번지는 것처럼 연출
             setTimeout(() => { document.getElementById('ink1').classList.add('splat-anim'); }, 400);
             setTimeout(() => { document.getElementById('ink3').classList.add('splat-anim'); }, 500);
             setTimeout(() => { document.getElementById('ink2').classList.add('splat-anim'); }, 600);
