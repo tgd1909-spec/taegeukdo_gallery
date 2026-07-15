@@ -31,7 +31,7 @@
             pointer-events: none; z-index: 10; mix-blend-mode: multiply;
         }
 
-        /* 2. 정적인 동양화 배경 배치 (산수화 & 대나무) */
+        /* 2. 정적인 동양화 배경 배치 (산수화만 남김) */
         .bg-painting {
             position: absolute;
             pointer-events: none;
@@ -47,32 +47,19 @@
         }
 
         /* ==========================================
-           [최종 해결책] 산수화 바닥 완벽 밀착 
+           [완벽 해결책] 산수화 바닥 절대 밀착 공식 
            ========================================== */
         .mountain-bg {
-            /* 핵심: 모니터 가로폭(vw)에 비례하여 그림의 하단 절반(안개)을 모니터 밖으로 완전히 잘라냅니다 */
-            bottom: -18vw; 
+            /* 모니터 가로 폭에 상관없이, 무조건 화면 맨 아래(0)에서 지하로 25vh만큼 묻어버림 */
+            bottom: -25vh; 
             left: 0;
             width: 100vw;
-            height: auto; /* 모니터 크기에 상관없이 원본 비율을 강제 유지하여 붕 뜨는 현상 방지 */
+            /* 지하로 묻힌 만큼 높이를 늘려서 웅장함을 유지 (85vh - 25vh = 화면엔 60vh만 보임) */
+            height: 85vh; 
             object-fit: cover;
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 15%);
-        }
-
-        /* 왼쪽에서 가지를 뻗는 대나무 */
-        .bamboo-bg {
-            top: -5vh; 
-            left: -2vw; 
-            height: 90vh; 
-            width: auto;
-            opacity: 0;
-            animation: bambooFadeIn 3s ease-in-out 0.5s forwards; 
-        }
-
-        @keyframes bambooFadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 0.4; } 
+            object-position: center bottom; /* 이미지를 무조건 아래쪽 기준으로 정렬 */
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 35%);
         }
 
         /* 3. 매끄럽고 완벽한 타이틀 애니메이션 */
@@ -120,9 +107,7 @@
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; } .subtitle { font-size: 1.6rem; margin-bottom: 45px; }
             .btn-enter { font-size: 1.6rem; padding: 15px 45px; }
-            /* 모바일에서도 산맥이 바닥에 딱 붙도록 강력하게 조정 */
-            .mountain-bg { width: 250vw; left: -75vw; bottom: -45vw; }
-            .bamboo-bg { height: 60vh; left: -10vw; }
+            .mountain-bg { bottom: -15vh; height: 60vh; }
         }
     </style>
 </head>
@@ -130,8 +115,7 @@
 
     <div class="hanji-texture"></div>
 
-    <img class="bg-painting bamboo-bg" src="ink draw (1).jpg" alt="대나무 배경">
-    <!-- 바닥에 완벽히 밀착되도록 수정된 산수화 이미지 -->
+    <!-- 대나무를 삭제하고, 하단 안개를 완전히 파묻어버린 산수화 1장만 배치 -->
     <img class="bg-painting mountain-bg" src="ink draw (2).jpg" alt="산수화 배경">
 
     <div class="content" id="main-content">
