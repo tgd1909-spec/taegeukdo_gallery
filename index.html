@@ -89,21 +89,19 @@
         /* 새로 추가된 배경 태극 무늬 스타일 */
         .bg-taegeuk {
             position: absolute;
-            top: 5vh; 
-            right: 5vw;
-            /* 기존 350px에서 550px로 크기를 대폭 키웠습니다 */
+            top: 2vh; 
+            left: -120px; /* [수정됨] right 대신 left를 사용하여 좌측 벽에 밀착시킴 */
             width: 550px;
             opacity: 0;
-            /* 흰색 배경을 투명하게 날리고 색상만 한지에 스며들게 하는 핵심 속성 */
             mix-blend-mode: multiply; 
             pointer-events: none;
-            z-index: 2; /* 산수화 위, 글씨 아래에 배치 */
+            z-index: 2; 
             animation: taegeukWatermarkFade 3s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
         }
 
         @keyframes taegeukWatermarkFade {
             0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 0.3; transform: scale(1); } /* 0.3의 투명도로 은은하게 조절 (원하시면 숫자 조절 가능) */
+            100% { opacity: 0.3; transform: scale(1); } 
         }
 
         h1 {
@@ -177,8 +175,8 @@
         .menu-card p { font-size: 1.2rem; line-height: 1.6; color: #444; margin: 0; word-break: keep-all; }
 
         @media (max-width: 768px) {
-            /* 모바일 화면에서는 태극 마크 크기 조절 (기존 220px에서 320px로 확대) */
-            .bg-taegeuk { width: 320px; top: 3vh; right: -5vw; } 
+            /* 모바일 화면에서는 태극 마크 위치도 좌측으로 변경 */
+            .bg-taegeuk { width: 320px; top: 1vh; left: -80px; } /* [수정됨] right를 left로 변경 */
             h1 { font-size: 3.2rem; } 
             .subtitle { font-size: 1.4rem; margin-bottom: 45px; }
             .menu-container { flex-direction: column; align-items: center; gap: 20px; }
