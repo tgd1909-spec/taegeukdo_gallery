@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>태극도 디지털 전시관</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&display=swap" rel="stylesheet">
+    
+    <style>
+        @font-face {
+            font-family: 'ChosunGg';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGg.woff') format('woff');
+            font-weight: normal; font-style: normal;
+        }
+        :root {
+            --paper-bg: #F5F2EB; --ink-black: #1A1A1A; 
+            --ink-indigo: #121A52; --stamp-red: #B71C1C;
+        }
+        * { box-sizing: border-box; }
+        
+        body, html {
+            margin: 0; padding: 0; 
+            font-family: 'Noto Serif KR', serif; 
+            background-color: var(--paper-bg);
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0.03) 100%);
+            color: var(--ink-black);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .hanji-texture {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/%3E%3CfeColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.12 0"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)"/%3E%3C/svg%3E');
+            pointer-events: none; z-index: -1; mix-blend-mode: multiply;
+        }
+
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 20px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(245, 242, 235, 0.85);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(183, 28, 28, 0.1);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        .header h1 {
+            font-family: 'ChosunGg', serif; font-size: 2rem; margin: 0;
+            color: var(--ink-black); letter-spacing: -1px;
+        }
+        .btn-back {
+            text-decoration: none; color: var(--ink-black); font-weight: 600;
+            font-size: 1.1rem; display: flex; align-items: center; gap: 8px;
+            transition: color 0.3s;
+        }
+        .btn-back:hover { color: var(--stamp-red); }
+
+        .gallery-container {
+            max-width: 1200px; margin: 120px auto 80px; padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center; font-family: 'ChosunGg', serif; font-size: 3rem;
+            margin: 60px 0 40px; color: var(--ink-black);
+            position: relative; display: inline-block; left: 50%; transform: translateX(-50%);
+        }
+        .section-title::after {
+            content: ''; position: absolute; bottom: -10px; left: 25%; width: 50%;
+            height: 2px; background-color: var(--stamp-red);
+        }
+
+        /* 벽돌을 쌓듯 사진이 엇갈리게 배치되는 조적식(Masonry) 느낌의 그리드 */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .gallery-item {
+            display: flex; flex-direction: column;
+            opacity: 0; transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        /* 스크롤 시 부드럽게 나타나는 클래스 */
+        .gallery-item.visible {
+            opacity: 1; transform: translateY(0);
+        }
+
+        .photo-frame {
+            position: relative; width: 100%; aspect-ratio: 4/3;
+            overflow: hidden; border-radius: 4px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            cursor: pointer;
+            background-color: #e5e0d8; /* 이미지 로딩 전 배경색 */
+        }
+        .photo-frame img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        .photo-frame:hover img {
+            transform: scale(1.05);
+        }
+        
+        .photo-info {
+            padding: 15px 5px; text-align: center;
+        }
+        .photo-title {
+            font-size: 1.25rem; font-weight: 600; margin: 0 0 5px 0; color: #222;
+        }
+        .photo-date {
+            font-size: 0.95rem; color: #777; margin: 0;
+        }
+
+        .lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .lightbox.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .lightbox-close {
+            position: absolute; top: 30px; right: 40px;
+            color: #fff; font-size: 3rem; cursor: pointer;
+            font-family: sans-serif; line-height: 1;
+        }
+        .lightbox-content {
+            max-width: 90%; max-height: 80vh;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            border: 5px solid #fff; /* 사진전 느낌의 하얀 테두리 */
+        }
+        .lightbox-caption {
+            color: #fff; margin-top: 20px; font-size: 1.2rem; font-weight: 300; letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; }
+            .header h1 { font-size: 1.5rem; }
+            .section-title { font-size: 2.2rem; }
+            .gallery-grid { grid-template-columns: 1fr; gap: 30px; }
+            .lightbox-close { top: 15px; right: 20px; font-size: 2.5rem; }
+            .lightbox-content { border-width: 2px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hanji-texture"></div>
+
+    <header class="header">
+        <a href="index.html" class="btn-back">
+            <span>&larr;</span> 대문으로
+        </a>
+        <h1>디지털 전시관</h1>
+        <div style="width: 80px;"></div> <!-- 중앙 정렬을 위한 여백 -->
+    </header>
+
+    <main class="gallery-container">
+        
+        <!-- 전시 주제 1 -->
+        <h2 class="section-title">역사의 숨결</h2>
+        <div class="gallery-grid" id="gallery-section-1">
+            <!-- 임시 이미지들을 사용했습니다. 나중에 실제 태극도 사진 경로로 수정하세요. -->
+            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=History+Photo+1', '초기 도장 전경 (1950년대)')">
+                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+1" alt="초기 도장 전경"></div>
+                <div class="photo-info">
+                    <h3 class="photo-title">초기 도장 전경</h3>
+                    <p class="photo-date">195X년</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=History+Photo+2', '과거 정기 치성 모습')">
+                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+2" alt="정기 치성 모습"></div>
+                <div class="photo-info">
+                    <h3 class="photo-title">정기 치성 모습</h3>
+                    <p class="photo-date">196X년 X월 X일</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=History+Photo+3', '도인들의 수련 모습')">
+                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+3" alt="수련 모습"></div>
+                <div class="photo-info">
+                    <h3 class="photo-title">도인들의 수련</h3>
+                    <p class="photo-date">기록 미상</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 전시 주제 2 (스크롤을 내리면 나타납니다) -->
+        <h2 class="section-title" style="margin-top: 100px;">오늘날의 발자취</h2>
+        <div class="gallery-grid" id="gallery-section-2">
+            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=Recent+Photo+1', '최근 도장 행사 전경')">
+                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+4" alt="최근 행사"></div>
+                <div class="photo-info">
+                    <h3 class="photo-title">도장 추계 행사</h3>
+                    <p class="photo-date">2023년 10월</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=Recent+Photo+2', '도인 화합의 장')">
+                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+5" alt="도인 화합"></div>
+                <div class="photo-info">
+                    <h3 class="photo-title">도인 화합의 장</h3>
+                    <p class="photo-date">2024년 5월</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
+        <img src="" alt="확대된 사진" class="lightbox-content" id="lightbox-img">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. 스크롤에 따라 사진이 스르륵 나타나는 효과 (Intersection Observer)
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // 화면에 요소가 보이면 visible 클래스 추가
+                        entry.target.classList.add('visible');
+                        // 한 번 나타난 사진은 다시 숨기지 않음 (최적화)
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1, // 요소가 10% 정도 화면에 들어왔을 때 실행
+                rootMargin: "0px 0px -50px 0px" // 살짝 아래에서부터 트리거
+            });
+
+            galleryItems.forEach(item => {
+                observer.observe(item);
+            });
+            
+            // ESC 키를 누르면 라이트박스 닫기
+            document.addEventListener('keydown', function(event) {
+                if (event.key === "Escape") {
+                    closeLightbox();
+                }
+            });
+        });
+
+        // 2. 라이트박스(확대) 열기 함수
+        function openLightbox(imageSrc, captionText) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+
+            lightboxImg.src = imageSrc;
+            lightboxCaption.textContent = captionText;
+            lightbox.classList.add('active');
+            
+            // 뒷배경 스크롤 방지
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 3. 라이트박스 닫기 함수
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            
+            // 뒷배경 스크롤 원상복구
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
