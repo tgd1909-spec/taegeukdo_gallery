@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>태극도 디지털 사진관</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&display=swap" rel="stylesheet">
     
     <style>
-        /* 1. 기본 설정 및 한지 텍스처 */
         @font-face {
             font-family: 'ChosunGg';
             src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGg.woff') format('woff');
@@ -18,7 +17,6 @@
             --paper-bg: #F5F2EB; --ink-black: #1A1A1A; 
             --ink-indigo: #121A52; --stamp-red: #B71C1C;
         }
-        
         * {
             box-sizing: border-box;
         }
@@ -28,60 +26,58 @@
             width: 100%; height: 100%;
             font-family: 'Noto Serif KR', serif; 
             background-color: var(--paper-bg);
-            overflow: hidden; 
+            overflow: hidden; /* 바깥쪽 스크롤은 막아두고, 내부 wrapper에서 스크롤 처리 */
         }
 
-        /* 화면 전체를 덮는 한지 질감 레이어 */
         .hanji-texture {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/%3E%3CfeColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.12 0"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)"/%3E%3C/svg%3E');
             pointer-events: none; z-index: 10; mix-blend-mode: multiply;
         }
 
-        /* 2. 산수화 배경 배치 (화면 꽉 채우기 설정) */
+        /* 유저의 산수화 완벽 밀착 로직을 그대로 사용하되, 스크롤 시에도 배경이 고정되도록 fixed로 변경 */
         .bg-painting-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            overflow: hidden;
+            position: fixed; /* absolute에서 fixed로 변경하여 배경으로 영구 고정 */
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; overflow: hidden;
             background-color: var(--paper-bg);
         }
 
         .bg-painting {
-            width: 100%;
-            height: 100%;
-            /* object-fit: cover로 설정하면 가로세로 비율을 유지하면서 화면에 빈틈없이 가득 찹니다. */
+            width: 100%; height: 100%;
             object-fit: cover; 
-            /* 그림의 아래쪽(안개와 산)을 기준으로 고정하여 여백이 생기지 않도록 합니다. */
             object-position: center bottom; 
-            pointer-events: none;
-            mix-blend-mode: multiply; 
+            pointer-events: none; mix-blend-mode: multiply; 
             opacity: 0; 
             animation: paintingFadeIn 3s ease-in-out forwards;
         }
 
         @keyframes paintingFadeIn {
             0% { opacity: 0; }
-            100% { opacity: 0.85; } /* 배경 산수화가 은은하고 선명하게 보이도록 조절 */
+            100% { opacity: 0.85; } 
         }
 
-        /* 3. 매끄럽고 완벽한 타이틀 애니메이션 */
+        .fullpage-wrapper {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 5;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory; /* 마우스를 놓으면 다음 화면으로 자석처럼 찰칵 붙음 */
+            scroll-behavior: smooth;
+        }
+
+        /* 각각의 100vh 화면 단위 */
+        .section {
+            width: 100%; height: 100vh;
+            scroll-snap-align: start; /* 스크롤 정지 위치 */
+            scroll-snap-stop: always;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            position: relative;
+        }
+
         .content {
-            position: relative; 
-            z-index: 5; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center; 
-            width: 100%;
-            height: 100%; 
-            text-align: center; 
-            padding: 20px;
-            opacity: 0; 
-            visibility: hidden;
+            text-align: center; padding: 20px;
+            opacity: 0; visibility: hidden;
             will-change: opacity, transform;
         }
         
@@ -97,60 +93,83 @@
 
         h1 {
             font-family: 'ChosunGg', '궁서', 'Gungsuh', serif; 
-            font-size: 6rem; 
-            font-weight: normal; 
-            color: var(--ink-black); 
-            margin: 0 0 15px 0; 
-            letter-spacing: -2px;
-            word-break: keep-all; 
+            font-size: 6rem; font-weight: normal; color: var(--ink-black); 
+            margin: 0 0 15px 0; letter-spacing: -2px; word-break: keep-all; 
             text-shadow: 0px 0px 20px rgba(245, 242, 235, 1), 0px 2px 10px rgba(255, 255, 255, 0.8); 
         }
         
         .subtitle {
-            font-size: 2.2rem; 
-            font-weight: 600; 
-            color: #222222; 
-            margin: 0 0 60px 0;
-            word-break: keep-all; 
-            text-shadow: 0px 0px 15px rgba(245, 242, 235, 1);
-        }
-        
-        .btn-enter {
-            display: inline-block; 
-            background-color: var(--stamp-red); 
-            color: #FFFFFF;
-            text-decoration: none; 
-            font-family: 'ChosunGg', '궁서', 'Gungsuh', serif;
-            font-size: 2.2rem; 
-            padding: 20px 65px; 
-            border-radius: 4px; 
-            border: 3px solid #8B0000;
-            box-shadow: 5px 8px 15px rgba(139, 0, 0, 0.2); 
-            transition: all 0.3s ease; 
-            position: relative;
-        }
-        
-        .btn-enter::before {
-            content: ''; 
-            position: absolute; 
-            top: 4px; 
-            left: 4px; 
-            right: 4px; 
-            bottom: 4px;
-            border: 1px solid rgba(255,255,255,0.3); 
-            pointer-events: none;
-        }
-        
-        .btn-enter:hover { 
-            background-color: #900000; 
-            transform: translateY(-4px) scale(1.03); 
+            font-size: 2.2rem; font-weight: 600; color: #222222; margin: 0 0 60px 0;
+            word-break: keep-all; text-shadow: 0px 0px 15px rgba(245, 242, 235, 1);
         }
 
-        /* 모바일 및 태블릿 화면 맞춤형 배치 */
+        /* 스크롤 유도 화살표 애니메이션 */
+        .scroll-indicator {
+            cursor: pointer;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 15px; color: var(--stamp-red); font-size: 1.2rem; font-weight: 600;
+            animation: bounce 2s infinite ease-in-out;
+            opacity: 0;
+            animation-delay: 2s; /* 글씨가 다 나오고 난 뒤에 화살표 등장 */
+            animation-fill-mode: forwards;
+        }
+
+        .scroll-indicator svg { width: 30px; height: 30px; fill: currentColor; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); opacity: 0.8; }
+            50% { transform: translateY(15px); opacity: 1; }
+        }
+
+        .menu-container {
+            display: flex; gap: 40px;
+            max-width: 1200px; padding: 20px;
+            width: 100%; justify-content: center;
+        }
+
+        .menu-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 2px solid rgba(183, 28, 28, 0.1);
+            border-radius: 12px;
+            padding: 50px 40px;
+            width: 45%;
+            text-decoration: none; color: var(--ink-black);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            cursor: pointer;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.9);
+            border-color: var(--stamp-red);
+            box-shadow: 0 20px 40px rgba(183, 28, 28, 0.15);
+        }
+
+        .menu-icon {
+            font-size: 3rem; margin-bottom: 20px; color: var(--stamp-red);
+        }
+
+        .menu-card h2 {
+            font-family: 'ChosunGg', '궁서', 'Gungsuh', serif;
+            font-size: 2.8rem; margin: 0 0 20px 0; color: var(--ink-black);
+        }
+
+        .menu-card p {
+            font-size: 1.2rem; line-height: 1.6; color: #444; margin: 0;
+            word-break: keep-all;
+        }
+
         @media (max-width: 768px) {
             h1 { font-size: 3.2rem; } 
-            .subtitle { font-size: 1.5rem; margin-bottom: 45px; }
-            .btn-enter { font-size: 1.5rem; padding: 15px 45px; }
+            .subtitle { font-size: 1.4rem; margin-bottom: 45px; }
+            .menu-container { flex-direction: column; align-items: center; gap: 20px; }
+            .menu-card { width: 90%; padding: 35px 20px; }
+            .menu-card h2 { font-size: 2.2rem; }
+            .menu-card p { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -158,20 +177,77 @@
 
     <div class="hanji-texture"></div>
 
+    <!-- 완벽하게 설정된 배경 이미지는 배경막으로 영구 고정됩니다. -->
     <div class="bg-painting-container">
         <img class="bg-painting" src="ink draw (1).jpg" alt="산수화 배경">
     </div>
 
-    <div class="content" id="main-content">
-        <h1>태극도</h1>
-        <p class="subtitle">도우(道友) 여러분, 디지털 사진관에 오신 것을 환영합니다</p>
-        <a href="01.html" class="btn-enter">디지털 사진관 관람하기</a>
+    <!-- 스크롤이 적용되는 투명한 컨테이너 -->
+    <div class="fullpage-wrapper" id="scrollWrapper">
+        
+        <!-- [첫 번째 화면] 메인 대문 -->
+        <section class="section" id="section1">
+            <div class="content" id="main-content">
+                <h1>태극도</h1>
+                <p class="subtitle">도우(道友) 여러분, 디지털 사진관에 오신 것을 환영합니다</p>
+                
+                <!-- 아래로 내려가라는 안내 화살표 -->
+                <div class="scroll-indicator" onclick="scrollToMenu()">
+                    <span>화면을 올려주세요</span>
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- [두 번째 화면] 2개의 입장 버튼 (전시관 / 도서관) -->
+        <section class="section" id="section2">
+            <div class="menu-container">
+                
+                <!-- 1. 박물관 형태의 전시관 (01.html) -->
+                <a href="01.html" class="menu-card">
+                    <div class="menu-icon">🖼️</div>
+                    <h2>디지털 전시관</h2>
+                    <p>태극도의 역사적인 발자취와 중요 행사 사진들을<br>관리자가 엄선하여 박물관처럼 전시한 공간입니다.</p>
+                </a>
+
+                <!-- 2. 도서관 형태의 아카이브 (02.html) -->
+                <a href="02.html" class="menu-card">
+                    <div class="menu-icon">📚</div>
+                    <h2>자료 도서관</h2>
+                    <p>과거의 문헌, 기록물, 사진 등 궁금한 자료를<br>직접 검색하고 자유롭게 열람할 수 있는 아카이브입니다.</p>
+                </a>
+
+            </div>
+        </section>
+
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // 1. 타이틀 부드럽게 나타나기
             document.getElementById('main-content').classList.add('content-reveal');
+
+            const scrollWrapper = document.getElementById('scrollWrapper');
+            const section2 = document.getElementById('section2');
+            let hasScrolled = false;
+
+            // 유저가 스스로 스크롤을 했는지 감지
+            scrollWrapper.addEventListener('scroll', function() {
+                hasScrolled = true;
+            });
+
+            // 2. 일정 시간(4초) 후 아무런 조작이 없으면 자동으로 아래 화면으로 스르륵 내려감
+            setTimeout(function() {
+                if (!hasScrolled) {
+                    section2.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 4000); // 4000ms = 4초 뒤
         });
+
+        // 화살표 클릭 시 수동으로 부드럽게 내려가는 기능
+        function scrollToMenu() {
+            document.getElementById('section2').scrollIntoView({ behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
