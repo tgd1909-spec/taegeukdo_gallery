@@ -1,0 +1,31 @@
+backend:
+  name: github
+  repo: tgd1909-spec/taeguekdo_gallery 
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "images/uploads"
+
+collections:
+  - name: "exhibition"
+    label: "전시관 사진 등록"
+    folder: "_exhibition"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "대분류 (장소)", name: "category", widget: "select", options: ["대강전", "능소", "보수도정", "감천", "치성 및 행사"]}
+      - {label: "중분류 (연대)", name: "era", widget: "select", options: ["1950년대", "1960년대", "1970년대", "1980년대", "1990년대", "2000년대", "현재"]}
+      - {label: "사진 제목", name: "title", widget: "string"}
+      - {label: "사진 첨부", name: "thumbnail", widget: "image"}
+      - {label: "촬영 연월", name: "date_str", widget: "string"}
+      - {label: "상세 설명", name: "body", widget: "text"}
+```eof
+
+### 5. 마지막 확인 작업
+*   `config.yml`을 만들고 커밋하면, GitHub Actions가 다시 한번 배포를 시작합니다. 
+*   **약 1분 후**에 다시 `[https://tgd1909-spec.github.io/taeguekdo_gallery/admin/](https://tgd1909-spec.github.io/taeguekdo_gallery/admin/)` 으로 접속해 보세요. 
+*   이제는 화면에 **"Login with GitHub"** 버튼이 나타날 것입니다.
+
+만약 여전히 404가 뜬다면, **혹시 폴더 이름이 `Admin`(대문자)으로 되어 있지는 않은지** 한번만 더 확인해 주세요! (깃허브는 대소문자를 아주 엄격하게 구분합니다. 무조건 소문자 `admin`이어야 합니다.)
+
+성공하시면 바로 알려주세요! 그 다음 글쓰기 화면을 어떻게 우리 전시관(01.html)과 연결할지 바로 다음 스텝을 알려드리겠습니다.
