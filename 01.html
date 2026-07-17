@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&display=swap" rel="stylesheet">
     
     <style>
+        /* STREAMING_CHUNK:기본 스타일 및 한지 배경 설정 */
         @font-face {
             font-family: 'ChosunGg';
             src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGg.woff') format('woff');
@@ -15,262 +16,325 @@
         }
         :root {
             --paper-bg: #F5F2EB; --ink-black: #1A1A1A; 
-            --ink-indigo: #121A52; --stamp-red: #B71C1C;
+            --stamp-red: #B71C1C; --tab-gray: #dcd7c9;
         }
-        * { box-sizing: border-box; }
-        
         body, html {
-            margin: 0; padding: 0; 
-            font-family: 'Noto Serif KR', serif; 
-            background-color: var(--paper-bg);
-            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0.03) 100%);
-            color: var(--ink-black);
-            overflow-x: hidden;
+            margin: 0; padding: 0; font-family: 'Noto Serif KR', serif; 
+            background-color: var(--paper-bg); color: var(--ink-black);
             scroll-behavior: smooth;
         }
-
+        
         .hanji-texture {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/%3E%3CfeColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.12 0"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)"/%3E%3C/svg%3E');
-            pointer-events: none; z-index: -1; mix-blend-mode: multiply;
+            pointer-events: none; z-index: -1; mix-blend-mode: multiply; opacity: 0.8;
         }
 
+        /* STREAMING_CHUNK:헤더 및 내비게이션 스타일 */
         .header {
-            position: fixed; top: 0; left: 0; width: 100%;
-            padding: 20px 40px;
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(245, 242, 235, 0.85);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(183, 28, 28, 0.1);
-            z-index: 100;
-            transition: all 0.3s ease;
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(245, 242, 235, 0.95); backdrop-filter: blur(5px);
+            border-bottom: 2px solid var(--stamp-red);
+            padding: 15px 0 0 0;
         }
-        .header h1 {
-            font-family: 'ChosunGg', serif; font-size: 2rem; margin: 0;
-            color: var(--ink-black); letter-spacing: -1px;
+        .top-nav {
+            max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px 15px 20px;
         }
-        .btn-back {
-            text-decoration: none; color: var(--ink-black); font-weight: 600;
-            font-size: 1.1rem; display: flex; align-items: center; gap: 8px;
-            transition: color 0.3s;
-        }
-        .btn-back:hover { color: var(--stamp-red); }
-
-        .gallery-container {
-            max-width: 1200px; margin: 120px auto 80px; padding: 0 20px;
-        }
-
-        .section-title {
-            text-align: center; font-family: 'ChosunGg', serif; font-size: 3rem;
-            margin: 60px 0 40px; color: var(--ink-black);
-            position: relative; display: inline-block; left: 50%; transform: translateX(-50%);
-        }
-        .section-title::after {
-            content: ''; position: absolute; bottom: -10px; left: 25%; width: 50%;
-            height: 2px; background-color: var(--stamp-red);
-        }
-
-        /* 벽돌을 쌓듯 사진이 엇갈리게 배치되는 조적식(Masonry) 느낌의 그리드 */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 40px;
-        }
-
-        .gallery-item {
-            display: flex; flex-direction: column;
-            opacity: 0; transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        /* 스크롤 시 부드럽게 나타나는 클래스 */
-        .gallery-item.visible {
-            opacity: 1; transform: translateY(0);
-        }
-
-        .photo-frame {
-            position: relative; width: 100%; aspect-ratio: 4/3;
-            overflow: hidden; border-radius: 4px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            cursor: pointer;
-            background-color: #e5e0d8; /* 이미지 로딩 전 배경색 */
-        }
-        .photo-frame img {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: transform 0.7s ease;
-        }
-        .photo-frame:hover img {
-            transform: scale(1.05);
-        }
+        .btn-home { text-decoration: none; color: var(--ink-black); font-weight: 600; font-size: 1.1rem; transition: color 0.2s;}
+        .btn-home:hover { color: var(--stamp-red); }
+        .main-title { font-family: 'ChosunGg', serif; font-size: 2.2rem; margin: 0; }
         
-        .photo-info {
-            padding: 15px 5px; text-align: center;
+        /* STREAMING_CHUNK:대분류(장소) 탭 디자인 */
+        .category-tabs {
+            max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; gap: 30px;
+            overflow-x: auto; /* 모바일 가로 스크롤 */
+            white-space: nowrap; 
         }
-        .photo-title {
-            font-size: 1.25rem; font-weight: 600; margin: 0 0 5px 0; color: #222;
-        }
-        .photo-date {
-            font-size: 0.95rem; color: #777; margin: 0;
-        }
+        .category-tabs::-webkit-scrollbar { display: none; }
 
+        .tab-btn {
+            background: none; border: none; font-family: 'Noto Serif KR', serif; font-size: 1.2rem;
+            font-weight: 600; color: #888; cursor: pointer; padding-bottom: 12px; border-bottom: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover { color: #333; }
+        .tab-btn.active { color: var(--ink-black); border-bottom-color: var(--stamp-red); }
+
+        /* STREAMING_CHUNK:중분류(연도) 탭 디자인 */
+        .sub-tabs-container {
+            max-width: 1200px; margin: 30px auto; padding: 0 20px; text-align: center;
+            border-bottom: 1px solid var(--tab-gray);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .sub-tabs-container::-webkit-scrollbar { display: none; }
+
+        .sub-tab-btn {
+            background: none; border: none; font-size: 1.1rem; font-family: 'Noto Serif KR', serif;
+            padding: 10px 15px; color: #666; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+            transition: all 0.2s;
+        }
+        .sub-tab-btn:hover { color: var(--ink-black); }
+        .sub-tab-btn.active { font-weight: 900; color: var(--stamp-red); border-bottom-color: var(--stamp-red); }
+        
+        .tab-content, .sub-tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active, .sub-tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* STREAMING_CHUNK:갤러리 그리드 및 사진 카드 디자인 */
+        .gallery-container { max-width: 1200px; margin: 40px auto 80px; padding: 0 20px; }
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px 30px;
+        }
+        .gallery-item { cursor: pointer; transition: transform 0.3s ease; }
+        .gallery-item:hover { transform: translateY(-8px); }
+        .photo-frame {
+            width: 100%; aspect-ratio: 4/3; overflow: hidden; background: #ddd; border-radius: 4px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05);
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .gallery-item:hover .photo-frame img { transform: scale(1.05); }
+        .photo-info { padding: 15px 5px; }
+        .photo-title { font-size: 1.3rem; font-weight: 900; margin: 0 0 8px; color: var(--ink-black); }
+        .photo-desc-short { font-size: 1rem; color: #555; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* STREAMING_CHUNK:모달(라이트박스) 상세 보기 디자인 */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 1000;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease;
+            background: rgba(245, 242, 235, 0.98); z-index: 1000;
+            display: flex; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            overflow-y: auto; padding: 60px 20px; box-sizing: border-box;
         }
-        .lightbox.active {
-            opacity: 1; pointer-events: auto;
-        }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
         .lightbox-close {
-            position: absolute; top: 30px; right: 40px;
-            color: #fff; font-size: 3rem; cursor: pointer;
-            font-family: sans-serif; line-height: 1;
+            position: fixed; top: 20px; right: 40px; font-size: 3rem; cursor: pointer; color: var(--ink-black); z-index: 1001;
+            transition: transform 0.2s;
         }
-        .lightbox-content {
-            max-width: 90%; max-height: 80vh;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            border: 5px solid #fff; /* 사진전 느낌의 하얀 테두리 */
-        }
-        .lightbox-caption {
-            color: #fff; margin-top: 20px; font-size: 1.2rem; font-weight: 300; letter-spacing: 1px;
-        }
+        .lightbox-close:hover { transform: scale(1.1); }
+        
+        .lightbox-inner { max-width: 1200px; margin: auto; display: flex; gap: 60px; width: 100%; align-items: flex-start; }
+        .lightbox-img-wrap { flex: 1.5; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 10px solid #fff; border-radius: 2px; }
+        .lightbox-img-wrap img { width: 100%; height: auto; display: block; }
+        .lightbox-text-wrap { flex: 1; padding-top: 10px; }
+        
+        .lb-title { font-family: 'ChosunGg', serif; font-size: 2.8rem; margin: 0 0 15px; color: var(--ink-black); line-height: 1.2; }
+        .lb-divider { width: 40px; height: 4px; background-color: var(--stamp-red); margin-bottom: 20px; }
+        .lb-date { font-size: 1.1rem; color: #666; margin-bottom: 30px; font-weight: 600; letter-spacing: 1px; }
+        .lb-desc { font-size: 1.15rem; line-height: 1.8; color: #333; word-break: keep-all; }
 
+        @media (max-width: 900px) {
+            .lightbox-inner { flex-direction: column; }
+            .lightbox-text-wrap { padding-top: 20px; }
+        }
         @media (max-width: 768px) {
-            .header { padding: 15px 20px; }
-            .header h1 { font-size: 1.5rem; }
-            .section-title { font-size: 2.2rem; }
-            .gallery-grid { grid-template-columns: 1fr; gap: 30px; }
-            .lightbox-close { top: 15px; right: 20px; font-size: 2.5rem; }
-            .lightbox-content { border-width: 2px; }
+            .main-title { font-size: 1.6rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- STREAMING_CHUNK:HTML 뼈대 - 헤더 및 대분류 탭 -->
     <div class="hanji-texture"></div>
 
     <header class="header">
-        <a href="index.html" class="btn-back">
-            <span>&larr;</span> 대문으로
-        </a>
-        <h1>디지털 전시관</h1>
-        <div style="width: 80px;"></div> <!-- 중앙 정렬을 위한 여백 -->
+        <div class="top-nav">
+            <a href="index.html" class="btn-home">← 대문으로</a>
+            <h1 class="main-title">상설 전시관</h1>
+            <div style="width: 80px;"></div> <!-- 중앙 정렬 맞춤용 -->
+        </div>
+        
+        <!-- 대분류 5개 (장소) -->
+        <div class="category-tabs">
+            <button class="tab-btn active" onclick="openMainTab('daegang')">대강전</button>
+            <button class="tab-btn" onclick="openMainTab('neungso')">능소</button>
+            <button class="tab-btn" onclick="openMainTab('bosu')">보수도정</button>
+            <button class="tab-btn" onclick="openMainTab('gamcheon')">감천</button>
+            <button class="tab-btn" onclick="openMainTab('chiseong')">치성 및 행사</button>
+        </div>
     </header>
 
     <main class="gallery-container">
         
-        <!-- 전시 주제 1 -->
-        <h2 class="section-title">역사의 숨결</h2>
-        <div class="gallery-grid" id="gallery-section-1">
-            <!-- 임시 이미지들을 사용했습니다. 나중에 실제 태극도 사진 경로로 수정하세요. -->
-            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=History+Photo+1', '초기 도장 전경 (1950년대)')">
-                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+1" alt="초기 도장 전경"></div>
-                <div class="photo-info">
-                    <h3 class="photo-title">초기 도장 전경</h3>
-                    <p class="photo-date">195X년</p>
+        <!-- STREAMING_CHUNK:대강전 탭 내용 -->
+        <!-- 1. 대강전 영역 -->
+        <div id="daegang" class="tab-content active">
+            <!-- 대강전 중분류 (연도별) -->
+            <div class="sub-tabs-container">
+                <button class="sub-tab-btn active" onclick="openSubTab('daegang', 'dae-1950')">1950년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('daegang', 'dae-1960')">1960년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('daegang', 'dae-1970')">1970년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('daegang', 'dae-1980')">1980년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('daegang', 'dae-1990')">1990년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('daegang', 'dae-2000')">2000년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('daegang', 'dae-now')">현재</button>
+            </div>
+
+            <!-- 대강전 1950년대 사진 목록 -->
+            <div id="dae-1950" class="sub-tab-content active gallery-grid">
+                <!-- 샘플 사진 카드 1 -->
+                <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/dcd7c9/1a1a1a?text=Daegangjeon+1957', '대강전 상량식 전경', '1957년 4월', '대강전 건물의 뼈대를 세우고 상량을 올리는 역사적인 행사입니다. 수많은 인파가 모여 건립을 축하하고 있습니다.')">
+                    <div class="photo-frame"><img src="https://placehold.co/600x450/dcd7c9/1a1a1a?text=1957+Photo" alt="썸네일"></div>
+                    <div class="photo-info">
+                        <h3 class="photo-title">대강전 상량식 전경</h3>
+                        <p class="photo-desc-short">건물의 뼈대를 세우고 상량을 올리는 역사적인 행사입니다.</p>
+                    </div>
                 </div>
             </div>
             
-            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=History+Photo+2', '과거 정기 치성 모습')">
-                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+2" alt="정기 치성 모습"></div>
-                <div class="photo-info">
-                    <h3 class="photo-title">정기 치성 모습</h3>
-                    <p class="photo-date">196X년 X월 X일</p>
-                </div>
-            </div>
-
-            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=History+Photo+3', '도인들의 수련 모습')">
-                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+3" alt="수련 모습"></div>
-                <div class="photo-info">
-                    <h3 class="photo-title">도인들의 수련</h3>
-                    <p class="photo-date">기록 미상</p>
-                </div>
-            </div>
+            <!-- 대강전 빈 연대들 -->
+            <div id="dae-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
         </div>
 
-        <!-- 전시 주제 2 (스크롤을 내리면 나타납니다) -->
-        <h2 class="section-title" style="margin-top: 100px;">오늘날의 발자취</h2>
-        <div class="gallery-grid" id="gallery-section-2">
-            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=Recent+Photo+1', '최근 도장 행사 전경')">
-                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+4" alt="최근 행사"></div>
-                <div class="photo-info">
-                    <h3 class="photo-title">도장 추계 행사</h3>
-                    <p class="photo-date">2023년 10월</p>
-                </div>
+        <!-- STREAMING_CHUNK:능소 탭 내용 -->
+        <!-- 2. 능소 영역 -->
+        <div id="neungso" class="tab-content">
+            <!-- 능소 중분류 (연도별) -->
+            <div class="sub-tabs-container">
+                <button class="sub-tab-btn active" onclick="openSubTab('neungso', 'neung-1950')">1950년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('neungso', 'neung-1960')">1960년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('neungso', 'neung-1970')">1970년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('neungso', 'neung-1980')">1980년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('neungso', 'neung-1990')">1990년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('neungso', 'neung-2000')">2000년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('neungso', 'neung-now')">현재</button>
             </div>
             
-            <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/eeeeee/333333?text=Recent+Photo+2', '도인 화합의 장')">
-                <div class="photo-frame"><img src="https://placehold.co/600x450/eeeeee/333333?text=Photo+5" alt="도인 화합"></div>
-                <div class="photo-info">
-                    <h3 class="photo-title">도인 화합의 장</h3>
-                    <p class="photo-date">2024년 5월</p>
-                </div>
+            <div id="neung-1950" class="sub-tab-content active gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">능소 1950년대 자료를 준비 중입니다.</p></div>
+            <div id="neung-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+        </div>
+
+        <!-- STREAMING_CHUNK:보수도정 탭 내용 -->
+        <!-- 3. 보수도정 영역 -->
+        <div id="bosu" class="tab-content">
+            <div class="sub-tabs-container">
+                <button class="sub-tab-btn active" onclick="openSubTab('bosu', 'bosu-1950')">1950년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('bosu', 'bosu-1960')">1960년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('bosu', 'bosu-1970')">1970년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('bosu', 'bosu-1980')">1980년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('bosu', 'bosu-1990')">1990년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('bosu', 'bosu-2000')">2000년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('bosu', 'bosu-now')">현재</button>
             </div>
+            
+            <div id="bosu-1950" class="sub-tab-content active gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">보수도정 1950년대 자료를 준비 중입니다.</p></div>
+            <div id="bosu-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+        </div>
+
+        <!-- STREAMING_CHUNK:감천 탭 내용 -->
+        <!-- 4. 감천 영역 -->
+        <div id="gamcheon" class="tab-content">
+            <div class="sub-tabs-container">
+                <button class="sub-tab-btn active" onclick="openSubTab('gamcheon', 'gam-1950')">1950년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('gamcheon', 'gam-1960')">1960년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('gamcheon', 'gam-1970')">1970년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('gamcheon', 'gam-1980')">1980년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('gamcheon', 'gam-1990')">1990년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('gamcheon', 'gam-2000')">2000년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('gamcheon', 'gam-now')">현재</button>
+            </div>
+            
+            <div id="gam-1950" class="sub-tab-content active gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">감천 1950년대 자료를 준비 중입니다.</p></div>
+            <div id="gam-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+        </div>
+
+        <!-- STREAMING_CHUNK:치성 및 행사 탭 내용 -->
+        <!-- 5. 치성 및 행사 영역 -->
+        <div id="chiseong" class="tab-content">
+             <div class="sub-tabs-container">
+                <button class="sub-tab-btn active" onclick="openSubTab('chiseong', 'chi-1950')">1950년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('chiseong', 'chi-1960')">1960년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('chiseong', 'chi-1970')">1970년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('chiseong', 'chi-1980')">1980년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('chiseong', 'chi-1990')">1990년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('chiseong', 'chi-2000')">2000년대</button>
+                <button class="sub-tab-btn" onclick="openSubTab('chiseong', 'chi-now')">현재</button>
+             </div>
+             
+             <div id="chi-1950" class="sub-tab-content active gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">치성 및 행사 1950년대 자료를 준비 중입니다.</p></div>
+             <div id="chi-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
         </div>
 
     </main>
 
+    <!-- STREAMING_CHUNK:상세 보기 모달 및 자바스크립트 -->
+    <!-- 모달(라이트박스) 뷰 -->
     <div class="lightbox" id="lightbox">
-        <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
-        <img src="" alt="확대된 사진" class="lightbox-content" id="lightbox-img">
-        <div class="lightbox-caption" id="lightbox-caption"></div>
+        <div class="lightbox-close" onclick="closeLightbox()" title="닫기">&times;</div>
+        <div class="lightbox-inner">
+            <div class="lightbox-img-wrap"><img src="" alt="상세 사진" id="lb-img"></div>
+            <div class="lightbox-text-wrap">
+                <h2 class="lb-title" id="lb-title">제목</h2>
+                <div class="lb-divider"></div>
+                <div class="lb-date" id="lb-date">날짜</div>
+                <div class="lb-desc" id="lb-desc">설명</div>
+            </div>
+        </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 1. 스크롤에 따라 사진이 스르륵 나타나는 효과 (Intersection Observer)
-            const galleryItems = document.querySelectorAll('.gallery-item');
-            
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // 화면에 요소가 보이면 visible 클래스 추가
-                        entry.target.classList.add('visible');
-                        // 한 번 나타난 사진은 다시 숨기지 않음 (최적화)
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1, // 요소가 10% 정도 화면에 들어왔을 때 실행
-                rootMargin: "0px 0px -50px 0px" // 살짝 아래에서부터 트리거
-            });
-
-            galleryItems.forEach(item => {
-                observer.observe(item);
-            });
-            
-            // ESC 키를 누르면 라이트박스 닫기
-            document.addEventListener('keydown', function(event) {
-                if (event.key === "Escape") {
-                    closeLightbox();
-                }
-            });
-        });
-
-        // 2. 라이트박스(확대) 열기 함수
-        function openLightbox(imageSrc, captionText) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            const lightboxCaption = document.getElementById('lightbox-caption');
-
-            lightboxImg.src = imageSrc;
-            lightboxCaption.textContent = captionText;
-            lightbox.classList.add('active');
-            
-            // 뒷배경 스크롤 방지
-            document.body.style.overflow = 'hidden';
+        // 대분류 탭 전환
+        function openMainTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
         }
 
-        // 3. 라이트박스 닫기 함수
+        // 중분류(연도) 탭 전환
+        function openSubTab(parentId, subTabId) {
+            const parent = document.getElementById(parentId);
+            parent.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+            parent.querySelectorAll('.sub-tab-content').forEach(content => content.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById(subTabId).classList.add('active');
+        }
+
+        // 사진 클릭 시 상세 보기 열기
+        function openLightbox(imgSrc, title, date, desc) {
+            document.getElementById('lb-img').src = imgSrc;
+            document.getElementById('lb-title').textContent = title;
+            document.getElementById('lb-date').textContent = date;
+            document.getElementById('lb-desc').textContent = desc;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        // 상세 보기 닫기
         function closeLightbox() {
-            const lightbox = document.getElementById('lightbox');
-            lightbox.classList.remove('active');
-            
-            // 뒷배경 스크롤 원상복구
-            document.body.style.overflow = 'auto';
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto'; 
         }
+
+        // ESC 키로 닫기 지원
+        document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeLightbox(); });
     </script>
 </body>
 </html>
+```eof
+
+이제 모든 장소(5개)와 연대(7개)가 거미줄처럼 빈틈없이 세팅된 완벽한 갤러리 코드가 제공되었습니다! 번거로우시겠지만 이 코드로 다시 한번 깃허브에 덮어써 주시면 바로 확인하실 수 있습니다.
