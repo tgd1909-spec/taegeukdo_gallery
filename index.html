@@ -86,22 +86,23 @@
             100% { opacity: 1; transform: translate3d(0, 0, 0); }
         }
 
-        .taegeuk-symbol {
-            width: 110px; height: 110px;
-            margin: 0 auto 25px auto;
+        /* 새로 추가된 배경 태극 무늬 스타일 */
+        .bg-taegeuk {
+            position: absolute;
+            top: 5vh; 
+            right: 5vw;
+            width: 350px;
+            opacity: 0;
+            /* 흰색 배경을 투명하게 날리고 색상만 한지에 스며들게 하는 핵심 속성 */
             mix-blend-mode: multiply; 
-            opacity: 0.9;
-            filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.05)); 
+            pointer-events: none;
+            z-index: 2; /* 산수화 위, 글씨 아래에 배치 */
+            animation: taegeukWatermarkFade 3s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
         }
 
-        .taegeuk-symbol svg {
-            width: 100%; height: 100%;
-            animation: subtleBreathe 6s ease-in-out infinite alternate;
-        }
-
-        @keyframes subtleBreathe {
-            0% { transform: scale(1) rotate(0deg); }
-            100% { transform: scale(1.02) rotate(1deg); }
+        @keyframes taegeukWatermarkFade {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 0.3; transform: scale(1); } /* 0.3의 투명도로 은은하게 조절 (원하시면 숫자 조절 가능) */
         }
 
         h1 {
@@ -175,7 +176,7 @@
         .menu-card p { font-size: 1.2rem; line-height: 1.6; color: #444; margin: 0; word-break: keep-all; }
 
         @media (max-width: 768px) {
-            .taegeuk-symbol { width: 80px; height: 80px; margin-bottom: 15px; } 
+            .bg-taegeuk { width: 220px; top: 3vh; right: 3vw; } /* 모바일 화면에서는 태극 마크 크기 조절 */
             h1 { font-size: 3.2rem; } 
             .subtitle { font-size: 1.4rem; margin-bottom: 45px; }
             .menu-container { flex-direction: column; align-items: center; gap: 20px; }
@@ -192,6 +193,9 @@
     <div class="bg-painting-container">
         <!-- 임시 투명화 코드(onerror)를 삭제하여 바로 복사/붙여넣기 가능하도록 정리했습니다 -->
         <img class="bg-painting" src="ink draw (1).jpg" alt="산수화 배경">
+        
+        <!-- 우측 상단에 은은하게 스며드는 수묵화 태극 무늬 추가 -->
+        <img class="bg-taegeuk" src="태극 무늬.png" alt="태극 무늬">
     </div>
 
     <div class="fullpage-wrapper" id="scrollWrapper">
@@ -199,23 +203,6 @@
         <section class="section" id="section1">
             <div class="content" id="main-content">
                 
-                <!-- 흑백 수채화풍 태극 문양 -->
-                <div class="taegeuk-symbol">
-                    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <filter id="brush-texture" x="-10%" y="-10%" width="120%" height="120%">
-                                <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" result="noise" />
-                                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5" xChannelSelector="R" yChannelSelector="G" />
-                            </filter>
-                        </defs>
-                        <g filter="url(#brush-texture)">
-                            <circle cx="60" cy="60" r="54" fill="none" stroke="var(--ink-black)" stroke-width="2" opacity="0.4"/>
-                            <path d="M60,10 A50,50 0 0,1 60,110 A25,25 0 0,1 60,60 A25,25 0 0,0 60,10" fill="var(--ink-black)" opacity="0.85"/>
-                            <path d="M60,10 A50,50 0 0,1 60,110 A25,25 0 0,1 60,60 A25,25 0 0,0 60,10" fill="var(--ink-black)" opacity="0.3" transform="scale(0.96) translate(2, 2)"/>
-                        </g>
-                    </svg>
-                </div>
-
                 <h1>태극도</h1>
                 <p class="subtitle">도우(道友) 여러분, 디지털 사진관에 오신 것을 환영합니다</p>
                 
