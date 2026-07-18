@@ -1,0 +1,21 @@
+backend:
+  name: github
+  repo: tgd1909-spec/taeguekdo_gallery 
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "images/uploads"
+
+collections:
+  - name: "exhibition"
+    label: "전시관 사진 등록"
+    folder: "_exhibition"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "대분류 (장소)", name: "category", widget: "select", options: ["대강전", "능소", "보수도정", "감천", "치성 및 행사"]}
+      - {label: "중분류 (연대)", name: "era", widget: "select", options: ["1950년대", "1960년대", "1970년대", "1980년대", "1990년대", "2000년대", "현재"]}
+      - {label: "사진 제목", name: "title", widget: "string"}
+      - {label: "사진 첨부", name: "thumbnail", widget: "image"}
+      - {label: "촬영 연월", name: "date_str", widget: "string"}
+      - {label: "상세 설명", name: "body", widget: "text"}
