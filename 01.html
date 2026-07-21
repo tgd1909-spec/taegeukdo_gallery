@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&display=swap" rel="stylesheet">
     
     <style>
-        /* STREAMING_CHUNK:기본 스타일 및 한지 배경 설정 */
+        /* 기본 스타일 및 한지 배경 설정 */
         @font-face {
             font-family: 'ChosunGg';
             src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGg.woff') format('woff');
@@ -30,7 +30,7 @@
             pointer-events: none; z-index: -1; mix-blend-mode: multiply; opacity: 0.8;
         }
 
-        /* STREAMING_CHUNK:헤더 및 내비게이션 스타일 */
+        /* 헤더 및 내비게이션 스타일 */
         .header {
             position: sticky; top: 0; z-index: 100;
             background: rgba(245, 242, 235, 0.95); backdrop-filter: blur(5px);
@@ -44,7 +44,7 @@
         .btn-home:hover { color: var(--stamp-red); }
         .main-title { font-family: 'ChosunGg', serif; font-size: 2.2rem; margin: 0; }
         
-        /* STREAMING_CHUNK:대분류(장소) 탭 디자인 */
+        /* 대분류(장소) 탭 디자인 */
         .category-tabs {
             max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; gap: 30px;
             overflow-x: auto; /* 모바일 가로 스크롤 */
@@ -60,7 +60,7 @@
         .tab-btn:hover { color: #333; }
         .tab-btn.active { color: var(--ink-black); border-bottom-color: var(--stamp-red); }
 
-        /* STREAMING_CHUNK:중분류(연도) 탭 디자인 */
+        /* 중분류(연도) 탭 디자인 */
         .sub-tabs-container {
             max-width: 1200px; margin: 30px auto; padding: 0 20px; text-align: center;
             border-bottom: 1px solid var(--tab-gray);
@@ -81,7 +81,7 @@
         .tab-content.active, .sub-tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* STREAMING_CHUNK:갤러리 그리드 및 사진 카드 디자인 */
+        /* 갤러리 그리드 및 사진 카드 디자인 */
         .gallery-container { max-width: 1200px; margin: 40px auto 80px; padding: 0 20px; }
         .gallery-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px 30px;
@@ -98,7 +98,7 @@
         .photo-title { font-size: 1.3rem; font-weight: 900; margin: 0 0 8px; color: var(--ink-black); }
         .photo-desc-short { font-size: 1rem; color: #555; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* STREAMING_CHUNK:모달(라이트박스) 상세 보기 디자인 */
+        /* 모달(라이트박스) 상세 보기 디자인 */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(245, 242, 235, 0.98); z-index: 1000;
@@ -133,14 +133,13 @@
 </head>
 <body>
 
-    <!-- STREAMING_CHUNK:HTML 뼈대 - 헤더 및 대분류 탭 -->
     <div class="hanji-texture"></div>
 
     <header class="header">
         <div class="top-nav">
             <a href="index.html" class="btn-home">← 대문으로</a>
             <h1 class="main-title">상설 전시관</h1>
-            <div style="width: 80px;"></div> <!-- 중앙 정렬 맞춤용 -->
+            <div style="width: 80px;"></div> 
         </div>
         
         <!-- 대분류 5개 (장소) -->
@@ -155,10 +154,8 @@
 
     <main class="gallery-container">
         
-        <!-- STREAMING_CHUNK:대강전 탭 내용 -->
         <!-- 1. 대강전 영역 -->
         <div id="daegang" class="tab-content active">
-            <!-- 대강전 중분류 (연도별) -->
             <div class="sub-tabs-container">
                 <button class="sub-tab-btn active" onclick="openSubTab('daegang', 'dae-1950')">1950년대</button>
                 <button class="sub-tab-btn" onclick="openSubTab('daegang', 'dae-1960')">1960년대</button>
@@ -169,31 +166,18 @@
                 <button class="sub-tab-btn" onclick="openSubTab('daegang', 'dae-now')">현재</button>
             </div>
 
-            <!-- 대강전 1950년대 사진 목록 -->
-            <div id="dae-1950" class="sub-tab-content active gallery-grid">
-                <!-- 샘플 사진 카드 1 -->
-                <div class="gallery-item" onclick="openLightbox('https://placehold.co/1200x800/dcd7c9/1a1a1a?text=Daegangjeon+1957', '대강전 상량식 전경', '1957년 4월', '대강전 건물의 뼈대를 세우고 상량을 올리는 역사적인 행사입니다. 수많은 인파가 모여 건립을 축하하고 있습니다.')">
-                    <div class="photo-frame"><img src="https://placehold.co/600x450/dcd7c9/1a1a1a?text=1957+Photo" alt="썸네일"></div>
-                    <div class="photo-info">
-                        <h3 class="photo-title">대강전 상량식 전경</h3>
-                        <p class="photo-desc-short">건물의 뼈대를 세우고 상량을 올리는 역사적인 행사입니다.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 대강전 빈 연대들 -->
-            <div id="dae-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="dae-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="dae-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="dae-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="dae-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="dae-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <!-- 자동화 로봇이 데이터를 채울 빈 컨테이너들 -->
+            <div id="dae-1950" class="sub-tab-content active gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-1960" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-1970" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-1980" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-1990" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-2000" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="dae-now" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
         </div>
 
-        <!-- STREAMING_CHUNK:능소 탭 내용 -->
         <!-- 2. 능소 영역 -->
         <div id="neungso" class="tab-content">
-            <!-- 능소 중분류 (연도별) -->
             <div class="sub-tabs-container">
                 <button class="sub-tab-btn active" onclick="openSubTab('neungso', 'neung-1950')">1950년대</button>
                 <button class="sub-tab-btn" onclick="openSubTab('neungso', 'neung-1960')">1960년대</button>
@@ -204,16 +188,15 @@
                 <button class="sub-tab-btn" onclick="openSubTab('neungso', 'neung-now')">현재</button>
             </div>
             
-            <div id="neung-1950" class="sub-tab-content active gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">능소 1950년대 자료를 준비 중입니다.</p></div>
-            <div id="neung-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="neung-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="neung-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="neung-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="neung-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="neung-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-1950" class="sub-tab-content active gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-1960" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-1970" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-1980" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-1990" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-2000" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="neung-now" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
         </div>
 
-        <!-- STREAMING_CHUNK:보수도정 탭 내용 -->
         <!-- 3. 보수도정 영역 -->
         <div id="bosu" class="tab-content">
             <div class="sub-tabs-container">
@@ -226,16 +209,15 @@
                 <button class="sub-tab-btn" onclick="openSubTab('bosu', 'bosu-now')">현재</button>
             </div>
             
-            <div id="bosu-1950" class="sub-tab-content active gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">보수도정 1950년대 자료를 준비 중입니다.</p></div>
-            <div id="bosu-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="bosu-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="bosu-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="bosu-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="bosu-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="bosu-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-1950" class="sub-tab-content active gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-1960" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-1970" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-1980" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-1990" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-2000" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="bosu-now" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
         </div>
 
-        <!-- STREAMING_CHUNK:감천 탭 내용 -->
         <!-- 4. 감천 영역 -->
         <div id="gamcheon" class="tab-content">
             <div class="sub-tabs-container">
@@ -248,16 +230,15 @@
                 <button class="sub-tab-btn" onclick="openSubTab('gamcheon', 'gam-now')">현재</button>
             </div>
             
-            <div id="gam-1950" class="sub-tab-content active gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">감천 1950년대 자료를 준비 중입니다.</p></div>
-            <div id="gam-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="gam-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="gam-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="gam-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="gam-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-            <div id="gam-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-1950" class="sub-tab-content active gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-1960" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-1970" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-1980" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-1990" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-2000" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+            <div id="gam-now" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
         </div>
 
-        <!-- STREAMING_CHUNK:치성 및 행사 탭 내용 -->
         <!-- 5. 치성 및 행사 영역 -->
         <div id="chiseong" class="tab-content">
              <div class="sub-tabs-container">
@@ -270,18 +251,17 @@
                 <button class="sub-tab-btn" onclick="openSubTab('chiseong', 'chi-now')">현재</button>
              </div>
              
-             <div id="chi-1950" class="sub-tab-content active gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">치성 및 행사 1950년대 자료를 준비 중입니다.</p></div>
-             <div id="chi-1960" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-             <div id="chi-1970" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-             <div id="chi-1980" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-             <div id="chi-1990" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-             <div id="chi-2000" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
-             <div id="chi-now" class="sub-tab-content gallery-grid"><p style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-1950" class="sub-tab-content active gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-1960" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-1970" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-1980" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-1990" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-2000" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
+             <div id="chi-now" class="sub-tab-content gallery-grid"><p class="empty-msg" style="text-align:center; padding: 40px; color:#666; grid-column: 1 / -1;">자료를 준비 중입니다.</p></div>
         </div>
 
     </main>
 
-    <!-- STREAMING_CHUNK:상세 보기 모달 및 자바스크립트 -->
     <!-- 모달(라이트박스) 뷰 -->
     <div class="lightbox" id="lightbox">
         <div class="lightbox-close" onclick="closeLightbox()" title="닫기">&times;</div>
@@ -332,9 +312,76 @@
 
         // ESC 키로 닫기 지원
         document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeLightbox(); });
+        
+        // ★ CMS 데이터 자동 불러오기 및 화면 렌더링 스크립트 ★
+        document.addEventListener("DOMContentLoaded", function() {
+            // 로봇이 만든 데이터를 가져옵니다.
+            fetch('gallery_data.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('데이터 파일이 아직 없습니다.');
+                    return response.json();
+                })
+                .then(data => {
+                    // 카테고리(장소)와 연대를 HTML ID와 짝지어주는 지도(Map)
+                    const categoryMap = {
+                        "대강전": "dae",
+                        "능소": "neung",
+                        "보수도정": "bosu",
+                        "감천": "gam",
+                        "치성 및 행사": "chi"
+                    };
+                    const eraMap = {
+                        "1950년대": "1950",
+                        "1960년대": "1960",
+                        "1970년대": "1970",
+                        "1980년대": "1980",
+                        "1990년대": "1990",
+                        "2000년대": "2000",
+                        "현재": "now"
+                    };
+
+                    // 가져온 사진 데이터를 하나씩 확인합니다.
+                    data.forEach(item => {
+                        const catPrefix = categoryMap[item.category];
+                        const eraSuffix = eraMap[item.era];
+                        
+                        // 장소와 연대가 모두 정확히 일치하는 경우에만 실행
+                        if (catPrefix && eraSuffix) {
+                            const targetId = `${catPrefix}-${eraSuffix}`;
+                            const container = document.getElementById(targetId);
+                            
+                            if (container) {
+                                // "자료를 준비 중입니다" 문구가 있으면 깨끗하게 지웁니다.
+                                const emptyMsg = container.querySelector('.empty-msg');
+                                if (emptyMsg) {
+                                    container.innerHTML = ''; 
+                                }
+                                
+                                // 사진 카드(HTML)를 새로 만듭니다.
+                                const card = document.createElement('div');
+                                card.className = 'gallery-item';
+                                
+                                // 클릭 시 모달창이 열리도록 설정
+                                card.onclick = function() {
+                                    openLightbox(item.thumbnail, item.title, item.date_str, item.body || '');
+                                };
+                                
+                                // 카드 안쪽 디자인 세팅
+                                card.innerHTML = `
+                                    <div class="photo-frame"><img src="${item.thumbnail}" alt="썸네일"></div>
+                                    <div class="photo-info">
+                                        <h3 class="photo-title">${item.title}</h3>
+                                        <p class="photo-desc-short">${item.body || ''}</p>
+                                    </div>
+                                `;
+                                // 완성된 카드를 알맞은 빈 공간에 쏙 넣습니다.
+                                container.appendChild(card);
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.log('갤러리 초기화 중 (새로운 사진이 등록되면 나타납니다.)'));
+        });
     </script>
 </body>
 </html>
-```eof
-
-이제 모든 장소(5개)와 연대(7개)가 거미줄처럼 빈틈없이 세팅된 완벽한 갤러리 코드가 제공되었습니다! 번거로우시겠지만 이 코드로 다시 한번 깃허브에 덮어써 주시면 바로 확인하실 수 있습니다.
