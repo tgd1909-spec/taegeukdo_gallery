@@ -1,5 +1,5 @@
 import os
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageEnhance  # ★ 투명도 조절을 위해 ImageEnhance 추가
 
 UPLOAD_DIR = 'images/uploads'
 WATERMARK_PATH = 'watermark.png'
@@ -32,13 +32,21 @@ for filename in os.listdir(UPLOAD_DIR):
             img = ImageOps.exif_transpose(img)
             img = img.convert("RGBA")
             
-            wm_width = int(img.width * 0.15)
+            # --- [워터마크 로직 변경 부분 시작] ---
+            # 워터마크 크기를 원본 사진 가로 넓이의 40%로 큼직하게 설정
+            wm_width = int(img.width * 0.4)
             wm_ratio = wm_width / float(watermark.width)
             wm_height = int(float(watermark.height) * float(wm_ratio))
             wm_resized = watermark.resize((wm_width, wm_height), Image.Resampling.LANCZOS)
             
-            margin = 20
-            position = (img.width - wm_width - margin, img.height - wm_height - margin)
+            # 투명도(Opacity) 15% 적용 (0.15 숫자를 조절하여 진하기 변경 가능)
+            alpha = wm_resized.split()[3]
+            alpha = ImageEnhance.Brightness(alpha).enhance(0.15)
+            wm_resized.putalpha(alpha)
+            
+            # 사진 정중앙에 배치하기 위한 좌표 계산
+            position = ((img.width - wm_width) // 2, (img.height - wm_height) // 2)
+            # --- [워터마크 로직 변경 부분 끝] ---
             
             transparent = Image.new('RGBA', img.size, (0,0,0,0))
             transparent.paste(img, (0,0))
@@ -46,7 +54,7 @@ for filename in os.listdir(UPLOAD_DIR):
             
             final_img = transparent.convert("RGB")
             final_img.save(img_path, quality=95)
-            print(f"{filename} - 자동 회전 및 워터마크 적용 완료")
+            print(f"{filename} - 자동 회전 및 중앙 반투명 워터마크 적용 완료")
             
             # 3. 방금 워터마크를 찍은 새 사진의 이름을 장부에 추가합니다.
             processed_files.add(filename)
