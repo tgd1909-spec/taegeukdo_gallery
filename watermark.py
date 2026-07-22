@@ -1,9 +1,9 @@
 import os
-from PIL import Image, ImageOps, ImageEnhance  # ★ 투명도 조절을 위해 ImageEnhance 추가
+from PIL import Image, ImageOps
 
 UPLOAD_DIR = 'images/uploads'
 WATERMARK_PATH = 'watermark.png'
-# ★ 추가됨: 로봇이 이미 처리한 사진의 이름을 기록해 둘 장부 파일
+# 로봇이 이미 처리한 사진의 이름을 기록해 둘 장부 파일
 LOG_FILE = 'images/uploads/watermark_log.txt' 
 
 if not os.path.exists(WATERMARK_PATH):
@@ -32,29 +32,27 @@ for filename in os.listdir(UPLOAD_DIR):
             img = ImageOps.exif_transpose(img)
             img = img.convert("RGBA")
             
-            # --- [워터마크 로직 변경 부분 시작] ---
-            # 워터마크 크기를 원본 사진 가로 넓이의 40%로 큼직하게 설정
-            wm_width = int(img.width * 0.4)
+            # --- [워터마크 위치 및 크기 복구] ---
+            # 크기: 사진 가로폭의 15% 크기로 깔끔하게 축소
+            wm_width = int(img.width * 0.15)
             wm_ratio = wm_width / float(watermark.width)
             wm_height = int(float(watermark.height) * float(wm_ratio))
             wm_resized = watermark.resize((wm_width, wm_height), Image.Resampling.LANCZOS)
             
-            # 투명도(Opacity) 15% 적용 (0.15 숫자를 조절하여 진하기 변경 가능)
-            alpha = wm_resized.split()[3]
-            alpha = ImageEnhance.Brightness(alpha).enhance(0.15)
-            wm_resized.putalpha(alpha)
-            
-            # 사진 정중앙에 배치하기 위한 좌표 계산
-            position = ((img.width - wm_width) // 2, (img.height - wm_height) // 2)
-            # --- [워터마크 로직 변경 부분 끝] ---
+            # 위치: 우측 하단 구석 (가장자리에서 20px 띄움)
+            margin = 20
+            position = (img.width - wm_width - margin, img.height - wm_height - margin)
+            # ----------------------------------
             
             transparent = Image.new('RGBA', img.size, (0,0,0,0))
             transparent.paste(img, (0,0))
+            
+            # mask=wm_resized 옵션을 통해 워터마크 원본의 100% 선명도와 투명 배경을 그대로 살려서 붙여넣습니다.
             transparent.paste(wm_resized, position, mask=wm_resized)
             
             final_img = transparent.convert("RGB")
             final_img.save(img_path, quality=95)
-            print(f"{filename} - 자동 회전 및 중앙 반투명 워터마크 적용 완료")
+            print(f"{filename} - 자동 회전 및 우측 하단 100% 선명한 워터마크 적용 완료")
             
             # 3. 방금 워터마크를 찍은 새 사진의 이름을 장부에 추가합니다.
             processed_files.add(filename)
