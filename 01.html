@@ -78,16 +78,16 @@
         .sub-tab-btn.active { font-weight: 900; color: var(--stamp-red); border-bottom-color: var(--stamp-red); }
         
         .tab-content { display: none; animation: fadeIn 0.5s ease; }
-.tab-content.active { display: block; }
-.sub-tab-content { display: none !important; animation: fadeIn 0.5s ease; }
-.sub-tab-content.active { display: grid !important; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-content.active { display: block; }
+        .sub-tab-content { display: none !important; animation: fadeIn 0.5s ease; }
+        .sub-tab-content.active { display: grid !important; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 갤러리 그리드 및 사진 카드 디자인 */
-.gallery-container { max-width: 1200px; margin: 40px auto 80px; padding: 0 20px; }
-.gallery-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px 30px;
-}
+        /* 갤러리 그리드 및 사진 카드 디자인 */
+        .gallery-container { max-width: 1200px; margin: 40px auto 80px; padding: 0 20px; }
+        .gallery-grid {
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px 30px;
+        }
         .gallery-item:hover { transform: translateY(-8px); }
         .photo-frame {
             width: 100%; aspect-ratio: 4/3; overflow: hidden; background: #ddd; border-radius: 4px;
@@ -130,6 +130,33 @@
         @media (max-width: 768px) {
             .main-title { font-size: 1.6rem; }
         }
+
+        /* --- 불펌 방지 CSS 시작 --- */
+        /* 웹페이지 전체 드래그 선택 차단 */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* 갤러리 썸네일 사진 위에 투명 보호막 씌우기 */
+        .photo-frame { position: relative; }
+        .photo-frame::after {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent; z-index: 10;
+        }
+
+        /* 팝업(모달) 창의 원본 사진 위에도 투명 보호막 씌우기 */
+        .lightbox-img-wrap { position: relative; }
+        .lightbox-img-wrap::after {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent; z-index: 10;
+        }
+        /* --- 불펌 방지 CSS 끝 --- */
+
     </style>
 </head>
 <body>
@@ -277,6 +304,11 @@
         </div>
     </div>
 
+    <!-- 저작권 명시 -->
+    <footer style="text-align: center; padding: 40px 20px; color: #888; font-size: 0.9rem; border-top: 1px solid #eaeaea; margin-top: 60px; font-family: 'Noto Serif KR', serif;">
+        &copy; 모든 저작권은 재단법인 태극도에 있습니다.
+    </footer>
+
     <script>
         // 대분류 탭 전환
         function openMainTab(tabId) {
@@ -383,6 +415,33 @@
                 })
                 .catch(error => console.log('갤러리 초기화 중 (새로운 사진이 등록되면 나타납니다.)'));
         });
+
+        // --- 불펌 방지 자바스크립트 시작 --- //
+        // 1. 마우스 우클릭 차단
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 2. 마우스 드래그 앤 드롭 차단
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // 3. 주요 단축키 및 캡처(PrintScreen) 방해
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === 'F12' || // 개발자 도구
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) || // 개발자 도구 단축키
+                (e.ctrlKey && (e.key === 'U' || e.key === 'u')) || // 소스 보기
+                (e.ctrlKey && (e.key === 'S' || e.key === 's')) || // 다른 이름으로 저장
+                (e.ctrlKey && (e.key === 'C' || e.key === 'c')) || // 복사
+                e.key === 'PrintScreen' // 프린트 스크린(캡처)
+            ) {
+                e.preventDefault();
+                alert('저작권 보호를 위해 해당 기능은 사용할 수 없습니다. 모든 자료의 저작권은 재단법인 태극도에 있습니다.');
+            }
+        });
+        // --- 불펌 방지 자바스크립트 끝 --- //
     </script>
 </body>
 </html>
