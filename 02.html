@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>태극도 디지털 아카이브 - 고문헌 열람실</title>
+    <title>태극도 디지털 아카이브 - 자료 도서관</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         @font-face {
             font-family: 'ChosunGg';
@@ -19,9 +19,8 @@
         :root {
             --bg-color: #F5F2EB; /* 한지 질감 웜톤 */
             --text-color: #1A1A1A; /* 먹물색 */
-            --point-color: #1A237E; /* 전통 남색 */
+            --point-blue: #1A237E; /* 자료 도서관 전용 전통 남색 포인트 */
             --border-color: #D7CCC8;
-            --card-bg: rgba(255, 255, 255, 0.7);
         }
 
         body {
@@ -51,21 +50,24 @@
         header {
             position: sticky;
             top: 0;
-            background-color: rgba(245, 242, 235, 0.95);
-            /* border-bottom 삭제 및 아래 카테고리 탭으로 이동 */
-            display: flex;
-            flex-direction: column; /* 세로 배치로 변경 */
-            z-index: 100;
+            background-color: rgba(245, 242, 235, 0.85);
             backdrop-filter: blur(5px);
+            z-index: 100;
+            border-bottom: 2px solid var(--point-blue);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .header-top {
+            width: 100%;
+            max-width: 1200px; /* 01.html과 동일한 컨테이너 크기 */
+            margin: 0 auto;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            padding: 15px 20px;
-            position: relative;
+            padding: 25px 20px 15px 20px;
         }
 
         .back-btn {
@@ -78,114 +80,150 @@
             align-items: center;
             gap: 5px;
             transition: color 0.2s;
-            font-weight: 600;
         }
 
         .back-btn:hover {
-            color: var(--point-color);
+            font-weight: 700;
         }
 
         header h1 {
             font-family: 'ChosunGg', serif;
-            font-size: 1.9rem;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--text-color);
             margin: 0;
-            color: #1A1A1A; /* 검은색 글씨 */
-            font-weight: bold; /* 굵은 글씨 */
+            letter-spacing: 2px;
         }
 
-        /* 분류 탭 네비게이션 CSS 추가 */
-        .category-nav {
+        .tab-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: center;
-            gap: 25px;
-            width: 100%;
-            border-bottom: 2px solid var(--border-color);
+            gap: 30px;
             padding: 0 20px;
+            /* 붉은 밑줄 위로 탭이 겹치도록 음수 마진 적용 */
+            margin-bottom: -2px; 
+            
+            /* 모바일 가로 스크롤 허용 */
+            overflow-x: auto;
+            white-space: nowrap;
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .tab-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
         }
 
-        .category-btn {
+        .tab-btn {
             background: none;
             border: none;
             font-family: 'Noto Serif KR', serif;
             font-size: 1.05rem;
             color: #888;
-            padding: 10px 5px 15px 5px;
+            padding: 10px 5px 12px 5px;
             cursor: pointer;
-            position: relative;
-            transition: color 0.2s;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
         }
 
-        .category-btn:hover {
+        .tab-btn:hover {
             color: var(--text-color);
         }
 
-        .category-btn.active {
+        .tab-btn.active {
             color: var(--text-color);
-            font-weight: 600;
-        }
-
-        .category-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; /* 보더 위에 덮이도록 */
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--point-color); /* 전통 남색 포인트 */
+            font-weight: 700;
+            border-bottom: 3px solid var(--point-blue);
         }
 
         main {
             padding: 40px 20px;
             max-width: 1200px;
             margin: 0 auto;
+            min-height: 60vh;
         }
 
-        .doc-grid {
+        .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
         }
 
-        .doc-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            overflow: hidden;
+        .gallery-item {
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.3s ease;
         }
 
-        .doc-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            border-color: var(--point-color);
+        .gallery-item:hover {
+            transform: translateY(-8px);
         }
 
-        .doc-cover {
+        .photo-frame {
             width: 100%;
-            height: 300px;
+            aspect-ratio: 4 / 3;
+            background-color: #e0ddd5;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-bottom: 1px solid var(--border-color);
+            transition: transform 0.5s ease;
         }
 
-        .doc-info {
-            padding: 20px;
-            flex-grow: 1;
+        .gallery-item:hover .photo-frame img {
+            transform: scale(1.05);
         }
 
-        .doc-title {
-            font-family: 'ChosunGg', serif;
-            font-size: 1.3rem;
-            margin: 0 0 10px 0;
+        .photo-info {
+            padding: 15px 0;
+            text-align: left;
+        }
+
+        .photo-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 6px 0;
             color: var(--text-color);
         }
 
-        .doc-date {
-            font-size: 0.85rem;
+        .photo-desc {
+            font-size: 0.9rem;
             color: #666;
             margin: 0;
+            line-height: 1.4;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #888;
+            padding: 40px 20px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 992px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        }
+
+        @media (max-width: 768px) {
+            .header-top { justify-content: center; flex-direction: column; padding-top: 20px; gap: 15px;}
+            .back-btn { position: relative; left: auto; align-self: flex-start; }
+            header h1 { font-size: 1.8rem; }
+            .tab-container { justify-content: flex-start; padding-bottom: 2px; }
+            .gallery-grid { grid-template-columns: 1fr; gap: 40px; }
         }
 
         .modal-overlay {
@@ -195,7 +233,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(26, 26, 26, 0.9); /* 어두운 먹물색 반투명 */
+            background-color: rgba(26, 26, 26, 0.9);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -213,7 +251,7 @@
             width: 95%;
             max-width: 1400px;
             height: 90vh;
-            border-radius: 8px;
+            border-radius: 4px;
             display: flex;
             flex-direction: row;
             overflow: hidden;
@@ -240,7 +278,7 @@
         }
 
         .viewer-pane {
-            flex: 6; /* 60% 차지 */
+            flex: 6; 
             background-color: #e0ddd5;
             position: relative;
             display: flex;
@@ -256,12 +294,11 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
 
-        /* 페이징 버튼 (이전/다음 장) */
         .page-nav {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background-color: var(--point-color);
+            background-color: rgba(26, 26, 26, 0.7);
             color: white;
             border: none;
             width: 45px;
@@ -272,15 +309,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            opacity: 0.7;
-            transition: opacity 0.2s, background-color 0.2s;
+            transition: background-color 0.2s;
             z-index: 10;
         }
 
-        .page-nav:hover {
-            opacity: 1;
-        }
-
+        .page-nav:hover { background-color: var(--point-blue); }
         .page-prev { left: 20px; }
         .page-next { right: 20px; }
 
@@ -289,7 +322,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             color: white;
             padding: 5px 15px;
             border-radius: 20px;
@@ -297,18 +330,16 @@
         }
 
         .text-pane {
-            flex: 4; /* 40% 차지 */
+            flex: 4; 
             padding: 50px 40px;
             overflow-y: auto;
             border-left: 1px solid var(--border-color);
-            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3CfeColorMatrix type=\'matrix\' values=\'1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.12 0\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E');
             background-color: var(--bg-color);
-            background-blend-mode: multiply;
         }
 
         .text-pane h2 {
             font-family: 'ChosunGg', serif;
-            color: var(--point-color);
+            color: var(--text-color);
             font-size: 1.8rem;
             margin-top: 0;
             margin-bottom: 10px;
@@ -329,29 +360,10 @@
         }
 
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.3rem;
-            }
-            .modal-content {
-                flex-direction: column; /* 세로 분할로 변경 */
-                height: 95vh;
-                width: 100%;
-                border-radius: 0;
-            }
-            .viewer-pane {
-                flex: 4; /* 상단 이미지 영역 */
-            }
-            .text-pane {
-                flex: 6; /* 하단 텍스트 영역 */
-                padding: 25px 20px;
-                border-left: none;
-                border-top: 2px solid var(--border-color);
-            }
-            .page-nav {
-                width: 35px;
-                height: 35px;
-                font-size: 1.2rem;
-            }
+            .modal-content { flex-direction: column; height: 100vh; width: 100%; border-radius: 0; }
+            .viewer-pane { flex: 4; }
+            .text-pane { flex: 6; padding: 25px 20px; border-left: none; border-top: 2px solid var(--border-color); }
+            .page-nav { width: 35px; height: 35px; font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -364,35 +376,40 @@
             <a href="index.html" class="back-btn">← 대문으로</a>
             <h1>자료 도서관</h1>
         </div>
-        <!-- 검색 및 대분류를 위한 탭 영역 -->
-        <div class="category-nav" id="category-nav">
-            <button class="category-btn active" onclick="filterDocs('전체')">전체 자료</button>
-            <button class="category-btn" onclick="filterDocs('경전/교리')">경전/교리</button>
-            <button class="category-btn" onclick="filterDocs('공문서')">공문서</button>
-            <button class="category-btn" onclick="filterDocs('간행물')">간행물</button>
+        
+        <!-- 분류 탭 네비게이션 -->
+        <div class="tab-container" id="category-nav">
+            <button class="tab-btn active" onclick="filterDocs('전체 자료', this)">전체 자료</button>
+            <button class="tab-btn" onclick="filterDocs('경전·교리', this)">경전·교리</button>
+            <button class="tab-btn" onclick="filterDocs('역사·기록', this)">역사·기록</button>
+            <button class="tab-btn" onclick="filterDocs('도무·교화', this)">도무·교화</button>
+            <button class="tab-btn" onclick="filterDocs('행정·운영', this)">행정·운영</button>
         </div>
     </header>
 
     <main>
-        <div class="doc-grid" id="document-grid">
+        <!-- 01.html 스타일의 갤러리 그리드 -->
+        <div class="gallery-grid" id="document-grid">
             <!-- 자바스크립트로 데이터가 렌더링됩니다 -->
         </div>
     </main>
 
+    <footer>
+        © 모든 저작권은 재단법인 태극도에 있습니다.
+    </footer>
+
+    <!-- 문서 열람 모달 창 -->
     <div class="modal-overlay" id="doc-modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             
-            <!-- 좌측/상단: 이미지 뷰어 -->
             <div class="viewer-pane">
                 <button class="page-nav page-prev" id="btn-prev" onclick="changePage(-1)">&#10094;</button>
                 <img src="" alt="사료 이미지" class="viewer-image" id="modal-img">
                 <button class="page-nav page-next" id="btn-next" onclick="changePage(1)">&#10095;</button>
-                
                 <div class="page-indicator" id="page-info">1 / 1</div>
             </div>
 
-            <!-- 우측/하단: 텍스트 정보 -->
             <div class="text-pane">
                 <h2 id="modal-title">문헌 제목</h2>
                 <div class="meta" id="modal-date">작성일자 표기</div>
@@ -404,7 +421,7 @@
     </div>
 
     <script>
-        // 가상의 사료 데이터 (실제로는 Decap CMS -> Github Actions -> JSON 파일에서 가져옴)
+        // 가상의 사료 데이터
         // 용어 규칙 적용: '종도' 대신 '도우(道友)' 또는 '도인' 사용
         const archiveData = [
             {
@@ -431,52 +448,51 @@
                 date: "1970년대 초반",
                 body: "<p>1970년대 전국 규모의 주요 행사를 앞두고 작성된 선언문의 초안입니다. <strong>도우(道友)</strong> 화합과 상생의 가치를 강조하는 문구들이 여러 차례 수정된 흔적을 확인할 수 있습니다.</p>",
                 images: [
-                    "https://placehold.co/700x1000/e0ddd5/1a1a1a?text=Document+Draft"
+                    "https://placehold.co/1000x700/e0ddd5/1a1a1a?text=Document+Draft"
                 ]
             }
         ];
 
-        function filterDocs(category) {
-            // 탭 활성화 UI 변경
-            const btns = document.querySelectorAll('.category-btn');
-            btns.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // 실제로는 여기서 JSON 데이터를 카테고리로 필터링하여 다시 그리드를 렌더링합니다.
-            // (현재는 껍데기 함수입니다)
-            console.log(category + ' 자료 필터링');
-        }
-
         let currentDocImages = [];
         let currentPageIndex = 0;
 
-        // 페이지 로드 시 리스트 렌더링
+        // 페이지 로드 시 갤러리 리스트 렌더링
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('document-grid');
             
             archiveData.forEach((doc, index) => {
                 const coverImg = doc.images[0];
                 const card = document.createElement('div');
-                card.className = 'doc-card';
+                card.className = 'gallery-item'; // 01.html 스타일 적용
                 card.onclick = () => openModal(index);
                 
                 card.innerHTML = `
-                    <img src="${coverImg}" class="doc-cover" alt="${doc.title} 표지">
-                    <div class="doc-info">
-                        <h3 class="doc-title">${doc.title}</h3>
-                        <p class="doc-date">${doc.date}</p>
+                    <div class="photo-frame">
+                        <img src="${coverImg}" alt="${doc.title} 표지">
+                    </div>
+                    <div class="photo-info">
+                        <h3 class="photo-title">${doc.title}</h3>
+                        <p class="photo-desc">${doc.date}</p>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         });
 
+        function filterDocs(category, btnElement) {
+            // 탭 활성화 UI 변경
+            const btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            console.log(category + ' 자료 필터링 처리 (추후 JSON 연동 시 활성화)');
+        }
+
         function openModal(index) {
             const doc = archiveData[index];
             currentDocImages = doc.images;
             currentPageIndex = 0;
 
-            // 텍스트 정보 업데이트
             document.getElementById('modal-title').textContent = doc.title;
             document.getElementById('modal-date').textContent = doc.date;
             document.getElementById('modal-content').innerHTML = doc.body;
@@ -487,16 +503,14 @@
             modal.style.display = 'flex';
             setTimeout(() => { modal.classList.add('active'); }, 10);
             
-            // 모달 열릴 때 body 스크롤 방지
             document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
             const modal = document.getElementById('doc-modal');
             modal.classList.remove('active');
-            setTimeout(() => { modal.style.display = 'none'; }, 300); // 트랜지션 대기
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
             
-            // 모달 닫을 때 body 스크롤 복구
             document.body.style.overflow = 'auto';
         }
 
@@ -509,7 +523,6 @@
             imgEl.src = currentDocImages[currentPageIndex];
             infoEl.textContent = `${currentPageIndex + 1} / ${currentDocImages.length}`;
 
-            // 버튼 표시 여부
             prevBtn.style.display = currentPageIndex > 0 ? 'flex' : 'none';
             nextBtn.style.display = currentPageIndex < currentDocImages.length - 1 ? 'flex' : 'none';
         }
@@ -522,60 +535,32 @@
             }
         }
 
-        // 모달 배경 클릭 시 닫기
         document.getElementById('doc-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
+            if (e.target === this) closeModal();
         });
 
-        // ESC 키 누르면 모달 닫기
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
+            if (e.key === 'Escape') closeModal();
         });
 
-        // 마우스 우클릭 방지
+        // 마우스 우클릭 차단
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
 
         // 드래그 및 텍스트 선택 방지
-        document.addEventListener('selectstart', function(e) {
-            e.preventDefault();
-        });
-        document.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-        });
+        document.addEventListener('selectstart', function(e) { e.preventDefault(); });
+        document.addEventListener('dragstart', function(e) { e.preventDefault(); });
 
-        // 개발자 도구 및 주요 단축키 차단 (F12, Ctrl+Shift+I, Ctrl+U 등)
+        // 개발자 도구 및 주요 단축키 차단
         document.addEventListener('keydown', function(e) {
-            // F12 차단
-            if (e.keyCode === 123) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl + Shift + I (개발자 도구) / Ctrl + Shift + J (콘솔) / Ctrl + Shift + C (요소 검사)
+            if (e.keyCode === 123) { e.preventDefault(); return false; } // F12
             if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
-                e.preventDefault();
-                return false;
+                e.preventDefault(); return false; // Ctrl+Shift+I/J/C
             }
-            // Ctrl + U (소스 보기)
-            if (e.ctrlKey && e.keyCode === 85) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl + S (저장)
-            if (e.ctrlKey && e.keyCode === 83) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl + P (인쇄)
-            if (e.ctrlKey && e.keyCode === 80) {
-                e.preventDefault();
-                return false;
-            }
+            if (e.ctrlKey && e.keyCode === 85) { e.preventDefault(); return false; } // Ctrl+U
+            if (e.ctrlKey && e.keyCode === 83) { e.preventDefault(); return false; } // Ctrl+S
+            if (e.ctrlKey && e.keyCode === 80) { e.preventDefault(); return false; } // Ctrl+P
         });
     </script>
 </body>
