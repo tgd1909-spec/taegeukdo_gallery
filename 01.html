@@ -49,6 +49,7 @@
             max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; gap: 30px;
             overflow-x: auto; /* 모바일 가로 스크롤 */
             white-space: nowrap; 
+            -webkit-overflow-scrolling: touch; /* 모바일에서 부드러운 스크롤 지원 */
         }
         .category-tabs::-webkit-scrollbar { display: none; }
 
@@ -56,6 +57,7 @@
             background: none; border: none; font-family: 'Noto Serif KR', serif; font-size: 1.2rem;
             font-weight: 600; color: #888; cursor: pointer; padding-bottom: 12px; border-bottom: 4px solid transparent;
             transition: all 0.3s;
+            flex-shrink: 0; /* 메뉴 텍스트가 찌그러지지 않도록 보호 */
         }
         .tab-btn:hover { color: #333; }
         .tab-btn.active { color: var(--ink-black); border-bottom-color: var(--stamp-red); }
@@ -64,8 +66,10 @@
         .sub-tabs-container {
             max-width: 1200px; margin: 30px auto; padding: 0 20px; text-align: center;
             border-bottom: 1px solid var(--tab-gray);
+            display: flex; justify-content: center; /* 중분류도 플렉스로 관리 */
             overflow-x: auto;
             white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
         .sub-tabs-container::-webkit-scrollbar { display: none; }
 
@@ -73,6 +77,7 @@
             background: none; border: none; font-size: 1.1rem; font-family: 'Noto Serif KR', serif;
             padding: 10px 15px; color: #666; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
             transition: all 0.2s;
+            flex-shrink: 0; /* 메뉴 텍스트 보호 */
         }
         .sub-tab-btn:hover { color: var(--ink-black); }
         .sub-tab-btn.active { font-weight: 900; color: var(--stamp-red); border-bottom-color: var(--stamp-red); }
@@ -92,6 +97,7 @@
         .photo-frame {
             width: 100%; aspect-ratio: 4/3; overflow: hidden; background: #ddd; border-radius: 4px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05);
+            position: relative; /* 불펌 방지 투명막용 */
         }
         .photo-frame img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
         .gallery-item:hover .photo-frame img { transform: scale(1.05); }
@@ -114,7 +120,7 @@
         .lightbox-close:hover { transform: scale(1.1); }
         
         .lightbox-inner { max-width: 1200px; margin: auto; display: flex; gap: 60px; width: 100%; align-items: flex-start; }
-        .lightbox-img-wrap { flex: 1.5; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 10px solid #fff; border-radius: 2px; }
+        .lightbox-img-wrap { flex: 1.5; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 10px solid #fff; border-radius: 2px; position: relative; }
         .lightbox-img-wrap img { width: 100%; height: auto; display: block; }
         .lightbox-text-wrap { flex: 1; padding-top: 10px; }
         
@@ -129,6 +135,16 @@
         }
         @media (max-width: 768px) {
             .main-title { font-size: 1.6rem; }
+            
+            /* 모바일 화면일 때 중앙 정렬을 풀고 왼쪽에서부터 스크롤되도록 변경 */
+            .category-tabs, .sub-tabs-container {
+                justify-content: flex-start; /* 중앙 정렬 해제 */
+                padding: 0 20px; /* 양쪽 끝 여백 확보 */
+            }
+            
+            /* 모바일에서는 탭 버튼 크기를 살짝 줄여서 한 화면에 더 많이 보이게 함 */
+            .tab-btn { font-size: 1.1rem; gap: 20px; }
+            .sub-tab-btn { font-size: 1rem; padding: 10px; }
         }
 
         /* --- 불펌 방지 CSS 시작 --- */
@@ -141,7 +157,6 @@
         }
 
         /* 갤러리 썸네일 사진 위에 투명 보호막 씌우기 */
-        .photo-frame { position: relative; }
         .photo-frame::after {
             content: '';
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -149,7 +164,6 @@
         }
 
         /* 팝업(모달) 창의 원본 사진 위에도 투명 보호막 씌우기 */
-        .lightbox-img-wrap { position: relative; }
         .lightbox-img-wrap::after {
             content: '';
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
