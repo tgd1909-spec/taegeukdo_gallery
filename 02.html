@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>태극도 디지털 아카이브 - 고문헌 열람실</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'ChosunGg';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGg.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --bg-color: #F5F2EB; /* 한지 질감 웜톤 */
+            --text-color: #1A1A1A; /* 먹물색 */
+            --point-color: #1A237E; /* 전통 남색 */
+            --border-color: #D7CCC8;
+            --card-bg: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            font-family: 'Noto Serif KR', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 한지 질감 오버레이 (클릭 방해 안됨) */
+        .hanji-texture {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3CfeColorMatrix type=\'matrix\' values=\'1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.12 0\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: -1;
+            mix-blend-mode: multiply;
+            opacity: 0.8;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(245, 242, 235, 0.95);
+            /* border-bottom 삭제 및 아래 카테고리 탭으로 이동 */
+            display: flex;
+            flex-direction: column; /* 세로 배치로 변경 */
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 15px 20px;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            color: var(--point-color);
+        }
+
+        header h1 {
+            font-family: 'ChosunGg', serif;
+            font-size: 1.9rem;
+            margin: 0;
+            color: #1A1A1A; /* 검은색 글씨 */
+            font-weight: bold; /* 굵은 글씨 */
+        }
+
+        /* 분류 탭 네비게이션 CSS 추가 */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            width: 100%;
+            border-bottom: 2px solid var(--border-color);
+            padding: 0 20px;
+        }
+
+        .category-btn {
+            background: none;
+            border: none;
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.05rem;
+            color: #888;
+            padding: 10px 5px 15px 5px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .category-btn:hover {
+            color: var(--text-color);
+        }
+
+        .category-btn.active {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .category-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; /* 보더 위에 덮이도록 */
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--point-color); /* 전통 남색 포인트 */
+        }
+
+        main {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .doc-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-color: var(--point-color);
+        }
+
+        .doc-cover {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .doc-info {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .doc-title {
+            font-family: 'ChosunGg', serif;
+            font-size: 1.3rem;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .doc-date {
+            font-size: 0.85rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 26, 26, 0.9); /* 어두운 먹물색 반투명 */
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: var(--bg-color);
+            width: 95%;
+            max-width: 1400px;
+            height: 90vh;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--text-color);
+            cursor: pointer;
+            z-index: 1010;
+            line-height: 1;
+            background: rgba(245, 242, 235, 0.8);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .viewer-pane {
+            flex: 6; /* 60% 차지 */
+            background-color: #e0ddd5;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .viewer-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        /* 페이징 버튼 (이전/다음 장) */
+        .page-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--point-color);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.7;
+            transition: opacity 0.2s, background-color 0.2s;
+            z-index: 10;
+        }
+
+        .page-nav:hover {
+            opacity: 1;
+        }
+
+        .page-prev { left: 20px; }
+        .page-next { right: 20px; }
+
+        .page-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .text-pane {
+            flex: 4; /* 40% 차지 */
+            padding: 50px 40px;
+            overflow-y: auto;
+            border-left: 1px solid var(--border-color);
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3CfeColorMatrix type=\'matrix\' values=\'1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.12 0\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E');
+            background-color: var(--bg-color);
+            background-blend-mode: multiply;
+        }
+
+        .text-pane h2 {
+            font-family: 'ChosunGg', serif;
+            color: var(--point-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .text-pane .meta {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .text-pane .content {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.3rem;
+            }
+            .modal-content {
+                flex-direction: column; /* 세로 분할로 변경 */
+                height: 95vh;
+                width: 100%;
+                border-radius: 0;
+            }
+            .viewer-pane {
+                flex: 4; /* 상단 이미지 영역 */
+            }
+            .text-pane {
+                flex: 6; /* 하단 텍스트 영역 */
+                padding: 25px 20px;
+                border-left: none;
+                border-top: 2px solid var(--border-color);
+            }
+            .page-nav {
+                width: 35px;
+                height: 35px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 필수 포함 요소: 한지 질감 배경 -->
+    <div class="hanji-texture"></div>
+
+    <header>
+        <div class="header-top">
+            <a href="index.html" class="back-btn">← 대문으로</a>
+            <h1>자료 도서관</h1>
+        </div>
+        <!-- 검색 및 대분류를 위한 탭 영역 -->
+        <div class="category-nav" id="category-nav">
+            <button class="category-btn active" onclick="filterDocs('전체')">전체 자료</button>
+            <button class="category-btn" onclick="filterDocs('경전/교리')">경전/교리</button>
+            <button class="category-btn" onclick="filterDocs('공문서')">공문서</button>
+            <button class="category-btn" onclick="filterDocs('간행물')">간행물</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="doc-grid" id="document-grid">
+            <!-- 자바스크립트로 데이터가 렌더링됩니다 -->
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="doc-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            
+            <!-- 좌측/상단: 이미지 뷰어 -->
+            <div class="viewer-pane">
+                <button class="page-nav page-prev" id="btn-prev" onclick="changePage(-1)">&#10094;</button>
+                <img src="" alt="사료 이미지" class="viewer-image" id="modal-img">
+                <button class="page-nav page-next" id="btn-next" onclick="changePage(1)">&#10095;</button>
+                
+                <div class="page-indicator" id="page-info">1 / 1</div>
+            </div>
+
+            <!-- 우측/하단: 텍스트 정보 -->
+            <div class="text-pane">
+                <h2 id="modal-title">문헌 제목</h2>
+                <div class="meta" id="modal-date">작성일자 표기</div>
+                <div class="content" id="modal-content">
+                    <!-- 본문 내용이 들어갑니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 가상의 사료 데이터 (실제로는 Decap CMS -> Github Actions -> JSON 파일에서 가져옴)
+        // 용어 규칙 적용: '종도' 대신 '도우(道友)' 또는 '도인' 사용
+        const archiveData = [
+            {
+                title: "도전(道典) 초판본 필사본",
+                date: "1958년 추정",
+                body: "<p>이 자료는 1950년대 후반 작성된 것으로 추정되는 도전 초판본의 필사본입니다.</p><p>당시 척박한 환경 속에서도 진리를 탐구하고자 했던 <strong>도우(道友)</strong>님들의 지극한 정성이 글씨마다 배어 있습니다. 우측 상단의 붉은 인장은 당시 지역 도장 건립에 참여했던 원로 <strong>도인</strong> 분들의 확인인으로 사료됩니다.</p><p>세월의 흔적으로 종이가 일부 훼손되었으나, 그 안에 담긴 뜻은 오늘날 우리에게도 깊은 울림을 줍니다.</p>",
+                images: [
+                    "https://placehold.co/800x1200/e0ddd5/1a1a1a?text=Page+1",
+                    "https://placehold.co/800x1200/e0ddd5/1a1a1a?text=Page+2",
+                    "https://placehold.co/800x1200/e0ddd5/1a1a1a?text=Page+3"
+                ]
+            },
+            {
+                title: "태극도보 제1호 (창간호)",
+                date: "1962년 3월 1일",
+                body: "<p>태극도의 주요 소식을 전하던 회보 '태극도보'의 창간호 스캔본입니다.</p><p>전국 각지에서 활동하던 <strong>도우(道友)</strong>들의 미담과 지역 행사 소식이 상세히 기록되어 있습니다. 당시 <strong>도인</strong>분들의 활발한 교류와 신앙 생활의 단면을 엿볼 수 있는 귀중한 역사적 사료입니다.</p>",
+                images: [
+                    "https://placehold.co/900x1300/e0ddd5/1a1a1a?text=Magazine+Cover",
+                    "https://placehold.co/900x1300/e0ddd5/1a1a1a?text=Magazine+Inner"
+                ]
+            },
+            {
+                title: "주요 행사 선언문 초안",
+                date: "1970년대 초반",
+                body: "<p>1970년대 전국 규모의 주요 행사를 앞두고 작성된 선언문의 초안입니다. <strong>도우(道友)</strong> 화합과 상생의 가치를 강조하는 문구들이 여러 차례 수정된 흔적을 확인할 수 있습니다.</p>",
+                images: [
+                    "https://placehold.co/700x1000/e0ddd5/1a1a1a?text=Document+Draft"
+                ]
+            }
+        ];
+
+        function filterDocs(category) {
+            // 탭 활성화 UI 변경
+            const btns = document.querySelectorAll('.category-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // 실제로는 여기서 JSON 데이터를 카테고리로 필터링하여 다시 그리드를 렌더링합니다.
+            // (현재는 껍데기 함수입니다)
+            console.log(category + ' 자료 필터링');
+        }
+
+        let currentDocImages = [];
+        let currentPageIndex = 0;
+
+        // 페이지 로드 시 리스트 렌더링
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('document-grid');
+            
+            archiveData.forEach((doc, index) => {
+                const coverImg = doc.images[0];
+                const card = document.createElement('div');
+                card.className = 'doc-card';
+                card.onclick = () => openModal(index);
+                
+                card.innerHTML = `
+                    <img src="${coverImg}" class="doc-cover" alt="${doc.title} 표지">
+                    <div class="doc-info">
+                        <h3 class="doc-title">${doc.title}</h3>
+                        <p class="doc-date">${doc.date}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        });
+
+        function openModal(index) {
+            const doc = archiveData[index];
+            currentDocImages = doc.images;
+            currentPageIndex = 0;
+
+            // 텍스트 정보 업데이트
+            document.getElementById('modal-title').textContent = doc.title;
+            document.getElementById('modal-date').textContent = doc.date;
+            document.getElementById('modal-content').innerHTML = doc.body;
+
+            updateImageDisplay();
+            
+            const modal = document.getElementById('doc-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.classList.add('active'); }, 10);
+            
+            // 모달 열릴 때 body 스크롤 방지
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('doc-modal');
+            modal.classList.remove('active');
+            setTimeout(() => { modal.style.display = 'none'; }, 300); // 트랜지션 대기
+            
+            // 모달 닫을 때 body 스크롤 복구
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateImageDisplay() {
+            const imgEl = document.getElementById('modal-img');
+            const prevBtn = document.getElementById('btn-prev');
+            const nextBtn = document.getElementById('btn-next');
+            const infoEl = document.getElementById('page-info');
+
+            imgEl.src = currentDocImages[currentPageIndex];
+            infoEl.textContent = `${currentPageIndex + 1} / ${currentDocImages.length}`;
+
+            // 버튼 표시 여부
+            prevBtn.style.display = currentPageIndex > 0 ? 'flex' : 'none';
+            nextBtn.style.display = currentPageIndex < currentDocImages.length - 1 ? 'flex' : 'none';
+        }
+
+        function changePage(direction) {
+            const newIndex = currentPageIndex + direction;
+            if (newIndex >= 0 && newIndex < currentDocImages.length) {
+                currentPageIndex = newIndex;
+                updateImageDisplay();
+            }
+        }
+
+        // 모달 배경 클릭 시 닫기
+        document.getElementById('doc-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // ESC 키 누르면 모달 닫기
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // 마우스 우클릭 방지
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 드래그 및 텍스트 선택 방지
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // 개발자 도구 및 주요 단축키 차단 (F12, Ctrl+Shift+I, Ctrl+U 등)
+        document.addEventListener('keydown', function(e) {
+            // F12 차단
+            if (e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl + Shift + I (개발자 도구) / Ctrl + Shift + J (콘솔) / Ctrl + Shift + C (요소 검사)
+            if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl + U (소스 보기)
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl + S (저장)
+            if (e.ctrlKey && e.keyCode === 83) {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl + P (인쇄)
+            if (e.ctrlKey && e.keyCode === 80) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
