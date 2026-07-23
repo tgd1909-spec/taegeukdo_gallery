@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>태극도 디지털 사진관</title>
+    
+    <!-- 웹 브라우저 탭 썸네일 (파비콘) 설정 -->
+    <link rel="icon" href="태극도 디지털 사진관 아이콘.jpeg" type="image/jpeg">
+    
+    <!-- 아이폰(iOS) 및 안드로이드 홈 화면 추가용 앱 아이콘 설정 -->
+    <link rel="apple-touch-icon" href="태극도 디지털 사진관 아이콘.jpeg">
+    
+    <!-- 스마트폰에서 웹앱처럼 보이게 하는 부가 설정 (상단 바 투명하게 등) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&display=swap" rel="stylesheet">
     
@@ -57,6 +67,23 @@
             100% { opacity: 0.85; } 
         }
 
+        .bg-taegeuk {
+            position: absolute;
+            top: 2vh; 
+            left: -120px; /* 좌측 벽에 밀착 */
+            width: 550px;
+            opacity: 0;
+            mix-blend-mode: multiply; 
+            pointer-events: none;
+            z-index: 2; 
+            animation: taegeukWatermarkFade 3s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+        }
+
+        @keyframes taegeukWatermarkFade {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 0.3; transform: scale(1); } 
+        }
+
         .fullpage-wrapper {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 5;
@@ -85,26 +112,6 @@
         @keyframes smoothReveal {
             0% { opacity: 0; transform: translate3d(0, 30px, 0); }
             100% { opacity: 1; transform: translate3d(0, 0, 0); }
-        }
-
-        /* 새로 추가된 배경 태극 무늬 스타일 */
-        .bg-taegeuk {
-            position: absolute;
-            top: 5vh; 
-            right: 5vw;
-            /* 기존 350px에서 550px로 크기를 대폭 키웠습니다 */
-            width: 550px;
-            opacity: 0;
-            /* 흰색 배경을 투명하게 날리고 색상만 한지에 스며들게 하는 핵심 속성 */
-            mix-blend-mode: multiply; 
-            pointer-events: none;
-            z-index: 2; /* 산수화 위, 글씨 아래에 배치 */
-            animation: taegeukWatermarkFade 3s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
-        }
-
-        @keyframes taegeukWatermarkFade {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 0.3; transform: scale(1); } /* 0.3의 투명도로 은은하게 조절 (원하시면 숫자 조절 가능) */
         }
 
         h1 {
@@ -164,7 +171,6 @@
             box-shadow: 0 20px 40px rgba(183, 28, 28, 0.15);
         }
 
-        /* [수정됨] 이모지 대신 들어갈 동양풍 SVG 아이콘 스타일 */
         .menu-icon { 
             width: 50px; height: 50px; 
             margin-bottom: 20px; 
@@ -178,8 +184,7 @@
         .menu-card p { font-size: 1.2rem; line-height: 1.6; color: #444; margin: 0; word-break: keep-all; }
 
         @media (max-width: 768px) {
-            /* 모바일 화면에서는 태극 마크 크기 조절 (기존 220px에서 320px로 확대) */
-            .bg-taegeuk { width: 320px; top: 3vh; right: -5vw; } 
+            .bg-taegeuk { width: 320px; top: 1vh; left: -80px; }
             h1 { font-size: 3.2rem; } 
             .subtitle { font-size: 1.4rem; margin-bottom: 45px; }
             .menu-container { flex-direction: column; align-items: center; gap: 20px; }
@@ -194,18 +199,17 @@
     <div class="hanji-texture"></div>
 
     <div class="bg-painting-container">
-        <!-- 임시 투명화 코드(onerror)를 삭제하여 바로 복사/붙여넣기 가능하도록 정리했습니다 -->
+        <!-- 배경 산수화 이미지 -->
         <img class="bg-painting" src="ink draw (1).jpg" alt="산수화 배경">
-        
-        <!-- 우측 상단에 은은하게 스며드는 수묵화 태극 무늬 추가 -->
+        <!-- 좌측 상단 수묵화 태극 무늬 -->
         <img class="bg-taegeuk" src="태극 무늬.png" alt="태극 무늬">
     </div>
 
     <div class="fullpage-wrapper" id="scrollWrapper">
         
+        <!-- 대문 섹션 -->
         <section class="section" id="section1">
             <div class="content" id="main-content">
-                
                 <h1>태극도</h1>
                 <p class="subtitle">도우(道友) 여러분, 디지털 사진관에 오신 것을 환영합니다</p>
                 
@@ -216,12 +220,13 @@
             </div>
         </section>
 
+        <!-- 메뉴 카드 섹션 -->
         <section class="section" id="section2">
             <div class="menu-container">
                 
                 <a href="01.html" class="menu-card">
                     <div class="menu-icon">
-                        <!-- [수정됨] 족자(Scroll) 형태의 전통적인 전시 아이콘 -->
+                        <!-- 족자(Scroll) 형태 아이콘 -->
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="5" y="3" width="14" height="2" fill="currentColor" stroke="none"/>
                             <rect x="7" y="5" width="10" height="14" stroke-width="1.5"/>
@@ -235,7 +240,7 @@
 
                 <a href="02.html" class="menu-card">
                     <div class="menu-icon">
-                        <!-- [수정됨] 고서적(전통 끈 묶음 책) 형태의 자료 도서관 아이콘 -->
+                        <!-- 고서적(전통 끈 묶음 책) 형태 아이콘 -->
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="4" y="3" width="16" height="18" rx="1" stroke-width="1.5"/>
                             <line x1="9" y1="3" x2="9" y2="21" stroke-width="1.5"/>
