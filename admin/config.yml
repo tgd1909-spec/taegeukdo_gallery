@@ -2,10 +2,14 @@ backend:
   name: git-gateway
   branch: main
 
+# [기존 유지] 01번 전시관이 사용하는 기본 미디어 폴더 (절대 수정 금지!)
 media_folder: "images/uploads"
 public_folder: "images/uploads"
 
 collections:
+  # ==========================================
+  # 1. [기존 유지] 01.html 상설 전시관 백엔드
+  # ==========================================
   - name: "exhibition"
     label: "전시관 사진 등록"
     folder: "_exhibition"
@@ -18,3 +22,36 @@ collections:
       - {label: "사진 첨부", name: "thumbnail", widget: "image"}
       - {label: "촬영 연월", name: "date_str", widget: "string"}
       - {label: "상세 설명", name: "body", widget: "text"}
+
+  # ==========================================
+  # 2. [신규 추가] 02.html 자료 도서관 백엔드
+  # ==========================================
+  - name: "archive_docs"
+    label: "자료 도서관 등록 (02.html)"
+    folder: "_archive_docs"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    # 01번 전시관 사진과 섞이지 않도록 도서관 전용 폴더로 100% 격리!
+    media_folder: "images/uploads/archive"
+    public_folder: "images/uploads/archive"
+    fields:
+      - {label: "문헌 제목", name: "title", widget: "string"}
+      - {label: "작성/발간 일자", name: "date", widget: "string", hint: "예: 1958년 추정, 1962년 3월 1일"}
+      - label: "자료 분류"
+        name: "category"
+        widget: "select"
+        options: ["전체 자료", "경전·교리", "역사·기록", "도무·교화", "행정·운영"]
+        default: "역사·기록"
+      
+      # [다중 이미지 처리] 버튼을 누를 때마다 스캔본 이미지를 계속 추가할 수 있는 리스트 기능
+      - label: "스캔본 이미지 목록 (JPG, PNG)"
+        name: "images"
+        widget: "list"
+        summary: "{{fields.image}}"
+        field: {label: "이미지 첨부", name: "image", widget: "image"}
+      
+      # [PDF 파일 첨부] 선택 사항으로 PDF 원본을 함께 첨부할 수 있는 기능
+      - {label: "PDF 원본 파일 (선택)", name: "pdf_file", widget: "file", required: false}
+      
+      # [본문 설명] 도인 및 도우(道友)님들의 사료에 담긴 뜻을 기록하는 에디터
+      - {label: "사료 본문 설명", name: "body", widget: "markdown"}
