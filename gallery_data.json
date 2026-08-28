@@ -1,34 +1,18 @@
 [
   {
-    "category": "능소",
-    "era": "1960년대",
-    "title": "tessssst",
-    "thumbnail": "images/uploads/95년-元대강전-마지막-강식법배-2-.jpg",
-    "date_str": "95.11",
-    "body": "dfjneknfjlj"
-  },
-  {
-    "category": "대강전",
-    "era": "1950년대",
-    "title": "테스트22",
-    "thumbnail": "images/uploads/95년-元대강전-마지막-치성-4-.jpg",
-    "date_str": "199601",
-    "body": "머시기저시기자시기"
-  },
-  {
-    "category": "대강전",
-    "era": "1950년대",
-    "title": "test",
-    "thumbnail": "images/uploads/95년-元대강전-마지막-치성-3-.jpg",
-    "date_str": "199511",
-    "body": "dfeghujnkdlfj"
-  },
-  {
     "category": "대강전",
     "era": "1950년대",
     "title": "테스트지롱",
     "thumbnail": "images/uploads/95년-元대강전-마지막-치성-5-.jpg",
     "date_str": "머시기",
     "body": "저시기"
+  },
+  {
+    "category": "능소",
+    "era": "1960년대",
+    "title": "tessssst",
+    "thumbnail": "images/uploads/95년-元대강전-마지막-강식법배-2-.jpg",
+    "date_str": "95.11",
+    "body": "dfjneknfjlj"
   }
 ]
